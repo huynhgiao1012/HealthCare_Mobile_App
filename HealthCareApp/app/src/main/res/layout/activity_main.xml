@@ -41,5 +41,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/sign_up_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/testBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Test" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
