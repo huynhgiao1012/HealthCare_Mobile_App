@@ -2,6 +2,7 @@ package com.example.healthcareapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,9 +22,20 @@ public class MainActivity extends AppCompatActivity {
         toSignInPg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = new Intent(getApplicationContext(), SignInActivity.class);
-                startActivity(signInIntent);
+                toIntent(SignInActivity.class);
             }
         });
+
+        toSignUpPg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toIntent(SignUpActivity.class);
+            }
+        });
+    }
+
+    private void toIntent(Class activityClass) {
+        Intent intent = new Intent(getApplicationContext(), activityClass);
+        startActivity(intent);
     }
 }

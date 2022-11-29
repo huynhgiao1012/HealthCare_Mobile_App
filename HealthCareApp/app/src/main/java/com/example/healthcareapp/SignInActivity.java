@@ -20,7 +20,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        usernameInput = findViewById(R.id.usernameField);
+        usernameInput = findViewById(R.id.IDNumField);
         passwordInput = findViewById(R.id.passwordField);
         rememberMeCB = findViewById(R.id.rememberMeCheckBox);
         signInBtn = findViewById(R.id.signInButton);

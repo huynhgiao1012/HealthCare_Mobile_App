@@ -19,14 +19,25 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MainActivity">
 
-        <Button
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            android:text="@string/app_title"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/toSignInPageBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/spacing_small"
             android:text="@string/sign_in_text" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/toSignUpPageBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/sign_up_text" />
