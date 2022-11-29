@@ -26,6 +26,8 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBtn = findViewById(R.id.signUpButton);
         toSignInPgBtn = findViewById(R.id.alreadyHadAccntBtn);
 
+        signUpBtn.setOnClickListener(signUpHandler);
+
         toSignInPgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,4 +40,11 @@ public class SignUpActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), destinationClass);
         startActivity(intent);
     }
+
+    private View.OnClickListener signUpHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO: Add logics to handle Sign Up
+        }
+    };
 }

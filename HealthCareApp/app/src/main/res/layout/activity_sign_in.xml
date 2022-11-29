@@ -68,6 +68,15 @@
             android:text="@string/remember_me_checkbox"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/forgotPWButton"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:text="Forgot your password?"
+            app:rippleColor="@android:color/transparent" />
+
         <!--Sign In Button-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signInButton"
