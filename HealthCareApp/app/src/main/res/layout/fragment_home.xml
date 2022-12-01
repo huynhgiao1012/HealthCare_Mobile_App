@@ -5,11 +5,45 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Home" />
+        android:layout_margin="@dimen/spacing_medium">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            android:text="@string/app_title"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toSignInPageBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_text"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:text="@string/sign_in_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toSignUpPageBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_text"
+            android:layout_below="@id/toSignInPageBtn"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/testBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:layout_below="@id/toSignUpPageBtn"/>
+    </RelativeLayout>
+
 
 </FrameLayout>

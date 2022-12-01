@@ -2,47 +2,69 @@ package com.example.healthcareapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
-    private Button toSignInPg, toSignUpPg, testBtn;
+
+    NavigationBarView bottomNav;
+    FrameLayout contentContainer;
+    Fragment homeFragment, newsFragment, chatFragment, userFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toSignInPg = findViewById(R.id.toSignInPageBtn);
-        toSignUpPg = findViewById(R.id.toSignUpPageBtn);
-        testBtn = findViewById(R.id.testBtn);
+        bottomNav = findViewById(R.id.bottomNav);
 
-        toSignInPg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toIntent(SignInActivity.class);
-            }
-        });
+        bottomNav.setOnItemSelectedListener(mOnItemSelectedListener);
 
-        toSignUpPg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toIntent(SignUpActivity.class);
-            }
-        });
+        homeFragment = new HomeFragment();
+        newsFragment = new NewsFragment();
+        chatFragment = new ChatFragment();
+        userFragment = new UserFragment();
 
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toIntent(HomeActivity.class);
-            }
-        });
+        loadFragment(homeFragment);
     }
 
-    private void toIntent(Class activityClass) {
-        Intent intent = new Intent(getApplicationContext(), activityClass);
-        startActivity(intent);
+    private NavigationBarView.OnItemSelectedListener mOnItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.homeItem:
+                    loadFragment(homeFragment);
+                    return true;
+
+                case R.id.newsItem:
+                    loadFragment(newsFragment);
+                    return true;
+
+                case R.id.chatItem:
+                    loadFragment(chatFragment);
+                    return true;
+
+                case R.id.userItem:
+                    loadFragment(userFragment);
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+    };
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.contentContainer, fragment);
+        transaction.commit();
     }
 }
