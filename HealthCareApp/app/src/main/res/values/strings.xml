@@ -34,15 +34,15 @@ Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendi
         <item>Title test</item>
     </string-array>
 
-    <string-array name="news_contents">
-
+    <string-array name="doctor_names">
+        <item>Ng Van A</item>
+        <item>Tran Van B</item>
+        <item>Ng Van C</item>
+        <item>Tran Van D</item>
+        <item>Ng Van E</item>
+        <item>Tran Van F</item>
+        <item>Ng Van G</item>
+        <item>Tran Van A</item>
     </string-array>
 
-    <string-array name="news_header_images">
-
-    </string-array>
-
-    <string-array name="news_url">
-
-    </string-array>
 </resources>

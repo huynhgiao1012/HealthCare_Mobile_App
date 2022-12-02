@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ArrayList<String> newsTitles;
     private NewsAdapter adapter;
     private ArrayList<NewsArticle> newsArticles;
 
