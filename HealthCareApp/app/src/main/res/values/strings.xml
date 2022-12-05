@@ -20,6 +20,7 @@
 
 Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendisse potenti. Sed convallis malesuada nisl, ut sodales est vulputate quis. Mauris purus purus, interdum suscipit magna vitae, aliquam gravida mauris. Nam hendrerit nunc sapien, quis convallis nunc semper sit amet. Donec magna augue, bibendum nec est nec, mollis placerat turpis. Donec in felis luctus, ultricies lectus sed, pharetra libero. Sed bibendum quis erat at venenatis. Proin egestas consectetur ante. Nam finibus sagittis nulla sit amet convallis. Cras tempus scelerisque augue ac auctor. In tristique sem id tincidunt volutpat. Aliquam vehicula posuere nisl id gravida. Cras enim arcu, aliquam vel consectetur sit amet, sollicitudin et nulla. Mauris nec vestibulum felis. Nam egestas dignissim nunc, vel dignissim turpis pellentesque in.</string>
     <string name="share_text">Share</string>
+    <string name="info_text">Info</string>
 
     <!--TODO: Remove the string arrays in the future-->
     <string-array name="news_titles">
