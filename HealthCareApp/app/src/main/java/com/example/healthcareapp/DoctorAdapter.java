@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -76,12 +79,13 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
 
         private void showBottomSheet() {
             bottomSheetDialog.setContentView(R.layout.doctor_chat);
-            setBotttomSheetBehavior();
+            setBottomSheetBehavior();
+            setContent();
             bottomSheetDialog.show();
         }
 
-        private void setBotttomSheetBehavior() {
-            BottomSheetBehavior bottomSheetBehavior = bottomSheetDialog.getBehavior();
+        private void setBottomSheetBehavior() {
+            bottomSheetBehavior = bottomSheetDialog.getBehavior();
 
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -96,6 +100,20 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
                 @Override
                 public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
+                }
+            });
+        }
+
+        private void setContent() {
+            Doctor currentDoc = doctorList.get(getAdapterPosition());
+            MaterialToolbar chatTopAppBar = bottomSheetDialog.findViewById(R.id.chatTopAppBar);
+
+            chatTopAppBar.setTitle(currentDoc.getName());
+
+            chatTopAppBar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
             });
         }
