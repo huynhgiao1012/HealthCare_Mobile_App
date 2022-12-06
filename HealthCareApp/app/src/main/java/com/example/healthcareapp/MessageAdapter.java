@@ -36,9 +36,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            Message currentMsg = msgArray.get(getAdapterPosition());
-            String msg = currentMsg.getMsg();
-
 
         }
 
