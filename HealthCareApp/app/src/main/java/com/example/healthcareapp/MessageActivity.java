@@ -1,14 +1,20 @@
 package com.example.healthcareapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -17,6 +23,7 @@ public class MessageActivity extends AppCompatActivity {
     private ArrayList<Message> msgList;
     private RecyclerView recyclerView;
     private MaterialToolbar toolbar;
+    private DoctorInfoFragment doctorInfoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +36,18 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         toolbar = findViewById(R.id.chatTopAppBar);
+
         Intent intent =  getIntent();
-        toolbar.setTitle(intent.getStringExtra("doctorName"));
+        String doctorName = intent.getStringExtra("doctorName");
+
+        toolbar.setTitle(doctorName);
         toolbar.setNavigationOnClickListener(navOnClickHandler);
+        toolbar.setOnMenuItemClickListener(menuItemClickListener);
+
+        doctorInfoFragment = new DoctorInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("doctorName", doctorName);
+        doctorInfoFragment.setArguments(bundle);
     }
 
     private View.OnClickListener navOnClickHandler = new View.OnClickListener() {
@@ -39,6 +55,22 @@ public class MessageActivity extends AppCompatActivity {
         public void onClick(View v) {
             finish();
             overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        }
+    };
+
+    private Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.doctorInfo:
+                    doctorInfoFragment.show(getSupportFragmentManager(), doctorInfoFragment.getTag());
+                    break;
+                case R.id.doctorCall:
+                    break;
+                default:
+                    return false;
+            }
+            return false;
         }
     };
 
