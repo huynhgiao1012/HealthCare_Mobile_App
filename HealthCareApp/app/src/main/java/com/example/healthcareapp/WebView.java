@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class WebView extends AppCompatActivity {
     private android.webkit.WebView webView;
     private String newsURL;
+    private MaterialToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +43,16 @@ public class WebView extends AppCompatActivity {
         else {
             webView.loadUrl(newsURL);
         }
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(onBackPressedHandler);
     }
+
+    private View.OnClickListener onBackPressedHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
+            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        }
+    };
 }

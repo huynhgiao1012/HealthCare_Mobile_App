@@ -1,5 +1,6 @@
 package com.example.healthcareapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -25,12 +28,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView headerImage;
         private final TextView newsTitle, newsContent;
+        private MaterialButton shareArticleBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             headerImage = itemView.findViewById(R.id.newsHeaderImg);
             newsContent = itemView.findViewById(R.id.newsContent);
             newsTitle = itemView.findViewById(R.id.newsTitle);
+            shareArticleBtn = itemView.findViewById(R.id.shareArticleButton);
+
+            shareArticleBtn.setOnClickListener(shareArticleHandler);
 
             itemView.setOnClickListener(this::onClick);
         }
@@ -43,7 +50,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             Intent intent = new Intent(context, WebView.class);
             intent.putExtra("newsURL", newsURL);
             context.startActivity(intent);
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        private View.OnClickListener shareArticleHandler = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewsArticle currentNews = newsArray.get(getAdapterPosition());
+                String newsURL = currentNews.getNewsURL();
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, newsURL);
+                context.startActivity(Intent.createChooser(intent, "Share To:"));
+            }
+        };
     }
 
     @NonNull

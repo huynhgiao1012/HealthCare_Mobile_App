@@ -59,6 +59,7 @@
                 android:layout_below="@id/divider"
                 android:layout_alignParentEnd="true"
                 android:text="@string/share_text"
+                android:id="@+id/shareArticleButton"
                 app:icon="@drawable/ic_share_24dp" />
 
         </RelativeLayout>
