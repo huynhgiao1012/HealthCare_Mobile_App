@@ -20,7 +20,7 @@ public class UserFragment extends Fragment {
     private ImageView userPfp;
     private TextView userName, userPhone;
     private MaterialButton userLogoutBtn;
-    private MaterialCardView userPersonalInfo, userAbout, userSignOut;
+    private MaterialCardView userPersonalInfo, enterSymptoms, userAbout, userSignOut;
     private Intent intent;
 
     @Override
@@ -44,12 +44,14 @@ public class UserFragment extends Fragment {
         userPhone = view.findViewById(R.id.userPhone);
         userLogoutBtn = view.findViewById(R.id.userLogoutButton);
         userPersonalInfo = view.findViewById(R.id.userPersonalInfo);
+        enterSymptoms = view.findViewById(R.id.enterSymptoms);
         userAbout = view.findViewById(R.id.userAbout);
         userSignOut = view.findViewById(R.id.userSignOut);
 
         userLogoutBtn.setOnClickListener(signOutHandler);
 
         userPersonalInfo.setOnClickListener(personalInfoHandler);
+        enterSymptoms.setOnClickListener(enterSymptomsHandler);
         userAbout.setOnClickListener(aboutHandler);
         userSignOut.setOnClickListener(signOutHandler);
     }
@@ -58,6 +60,15 @@ public class UserFragment extends Fragment {
         @Override
         public void onClick(View v) {
             intent = new Intent(getContext(), PersonalInfoActivity.class);
+            getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    };
+
+    private View.OnClickListener enterSymptomsHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            intent = new Intent(getContext(), EnterSymptomsActivity.class);
             getActivity().startActivity(intent);
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
