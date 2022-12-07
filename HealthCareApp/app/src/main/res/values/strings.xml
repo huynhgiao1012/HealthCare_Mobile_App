@@ -47,5 +47,6 @@ Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendi
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_password_label">New Password</string>
 
 </resources>

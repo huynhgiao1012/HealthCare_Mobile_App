@@ -1,5 +1,6 @@
 package com.example.healthcareapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,8 +48,8 @@ public class SignInActivity extends AppCompatActivity {
     private View.OnClickListener forgotPWHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Replace this with logics that handle "Forgot Password" case
-            Toast.makeText(getApplicationContext(), "Forgot Password Clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+            startActivity(intent);
         }
     };
 }
