@@ -10,12 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
     private CheckBox rememberMeCB;
     private Button signInBtn, forgotPWBtn;
+    private MaterialToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,12 @@ public class SignInActivity extends AppCompatActivity {
         rememberMeCB = findViewById(R.id.rememberMeCheckBox);
         signInBtn = findViewById(R.id.signInButton);
         forgotPWBtn = findViewById(R.id.forgotPWButton);
+        toolbar = findViewById(R.id.toolbar);
 
         signInBtn.setOnClickListener(signInHandler);
         forgotPWBtn.setOnClickListener(forgotPWHandler);
+
+        toolbar.setNavigationOnClickListener(onBackPressedHandler);
     }
 
     private String getInputValue(TextInputLayout input) {
@@ -50,6 +55,13 @@ public class SignInActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
             startActivity(intent);
+        }
+    };
+
+    private View.OnClickListener onBackPressedHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
         }
     };
 }

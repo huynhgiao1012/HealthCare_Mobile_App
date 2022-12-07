@@ -1,15 +1,14 @@
 package com.example.healthcareapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 public class PersonalInfoActivity extends AppCompatActivity {
     private TextInputEditText userName, userPhone, userNewPW;
@@ -45,6 +44,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             finish();
+            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
         }
     };
 }

@@ -69,20 +69,22 @@
                 android:id="@+id/userPersonalInfo"
                 style="@style/Widget.Material3.CardView.Filled"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_medium"
-                android:backgroundTint="@android:color/transparent">
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="0dp">
 
                 <TextView
                     style="@style/TextAppearance.Material3.TitleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:text="Personal information" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:src="@drawable/ic_forward_24dp" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -98,19 +100,21 @@
                 style="@style/Widget.Material3.CardView.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_medium"
-                android:backgroundTint="@android:color/transparent">
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="0dp">
 
                 <TextView
                     style="@style/TextAppearance.Material3.TitleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:text="About" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:src="@drawable/ic_forward_24dp" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -126,19 +130,21 @@
                 style="@style/Widget.Material3.CardView.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_medium"
-                android:backgroundTint="@android:color/transparent">
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="0dp">
 
                 <TextView
                     style="@style/TextAppearance.Material3.TitleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:text="Sign out" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:src="@drawable/ic_forward_24dp" />
 
             </com.google.android.material.card.MaterialCardView>

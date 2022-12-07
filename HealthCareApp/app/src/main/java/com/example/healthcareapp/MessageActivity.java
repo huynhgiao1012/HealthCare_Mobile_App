@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,8 @@ public class MessageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MaterialToolbar toolbar;
     private DoctorInfoFragment doctorInfoFragment;
+    private TextInputLayout chatTextInput;
+    private MaterialButton sendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class MessageActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("doctorName", doctorName);
         doctorInfoFragment.setArguments(bundle);
+
+        chatTextInput = findViewById(R.id.chatInputLayout);
+        sendBtn = findViewById(R.id.sendButton);
+
+        sendBtn.setOnClickListener(sendMsgHandler);
     }
 
     private View.OnClickListener navOnClickHandler = new View.OnClickListener() {
@@ -75,4 +84,11 @@ public class MessageActivity extends AppCompatActivity {
     };
 
     // TODO: Add logics relates to BE
+    private View.OnClickListener sendMsgHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO: Add logics to handle sending messages
+            String msg = chatTextInput.getEditText().getText().toString();
+        }
+    };
 }

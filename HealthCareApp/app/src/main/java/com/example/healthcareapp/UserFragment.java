@@ -1,5 +1,6 @@
 package com.example.healthcareapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class UserFragment extends Fragment {
         public void onClick(View v) {
             intent = new Intent(getContext(), PersonalInfoActivity.class);
             getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
     };
 
@@ -66,6 +68,7 @@ public class UserFragment extends Fragment {
         public void onClick(View v) {
             intent = new Intent(getContext(), AboutActivity.class);
             getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
     };
 
