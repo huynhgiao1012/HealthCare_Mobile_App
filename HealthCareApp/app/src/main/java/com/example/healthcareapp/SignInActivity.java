@@ -48,11 +48,6 @@ public class SignInActivity extends AppCompatActivity {
     private View.OnClickListener signInHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Replace this with logics that handle the authentication and submission to DB
-            Log.d("SignInAct", getInputValue(usernameInput));
-            Log.d("SignInAct", getInputValue(passwordInput));
-
-
             try {
                 Uri builtURI = Uri.parse("http://192.168.1.7:8080/api/account/getAccountByIdCard").buildUpon()
                         .appendQueryParameter("idCard", getInputValue(usernameInput))
@@ -82,9 +77,6 @@ public class SignInActivity extends AppCompatActivity {
     private View.OnClickListener forgotPWHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Replace this with logics that handle "Forgot Password" case
-            Toast.makeText(getApplicationContext(), "Forgot Password Clicked", Toast.LENGTH_SHORT).show();
-
             try {
                 Uri builtURI = Uri.parse("http://192.168.1.7:8080/api/account/forgotPassword").buildUpon()
                         .appendQueryParameter("idCard", getInputValue(usernameInput))
