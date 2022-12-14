@@ -17,13 +17,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Date;
-import java.time.Instant;
 import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {
@@ -54,11 +50,18 @@ public class NewsFragment extends Fragment {
         adapter = new NewsAdapter(this.getContext(), newsArticles);
         recyclerView.setAdapter(adapter);
 
-        try {
-            populateData();
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    populateData();
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
     }
 
     // TODO: Replace this method with logics that pull data from articles' API
@@ -76,7 +79,7 @@ public class NewsFragment extends Fragment {
         }
         JSONArray newsList = new JSONArray(content);
 
-        for (int i=0; i<newsList.length(); i++) {
+        for (int i = 0; i < newsList.length(); i++) {
             JSONObject news = newsList.getJSONObject(i);
 
             newsArticles.add(new NewsArticle(news.getString("title"), news.getString("description"), 0));
