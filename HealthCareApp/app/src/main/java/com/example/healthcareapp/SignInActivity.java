@@ -6,23 +6,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
     private CheckBox rememberMeCB;
     private Button signInBtn, forgotPWBtn;
     private MaterialToolbar toolbar;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+        mAuth = FirebaseAuth.getInstance();
 
         usernameInput = findViewById(R.id.IDNumField);
         passwordInput = findViewById(R.id.passwordField);
@@ -39,6 +43,17 @@ public class SignInActivity extends AppCompatActivity {
 
     private String getInputValue(TextInputLayout input) {
         return input.getEditText().getText().toString();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     private View.OnClickListener signInHandler = new View.OnClickListener() {

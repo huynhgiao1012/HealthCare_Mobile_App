@@ -91,4 +91,8 @@ public class MessageActivity extends AppCompatActivity {
             String msg = chatTextInput.getEditText().getText().toString();
         }
     };
+
+    private void handleVideoCall() {
+
+    }
 }
