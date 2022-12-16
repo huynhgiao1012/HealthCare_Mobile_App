@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         chatFragment = new ChatFragment();
         profileFragment = new ProfileFragment();
+
+        loadFragment(chatFragment);
     }
 
     @Override

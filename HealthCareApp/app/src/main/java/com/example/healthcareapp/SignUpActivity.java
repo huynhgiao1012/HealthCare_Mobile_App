@@ -15,13 +15,17 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
     private TextInputLayout IDNumInput, nameInput, PWInput, retypePWInput;
     private Button signUpBtn, toSignInPgBtn;
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +107,24 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // TODO: Add logics to add user to db
-                        signUpBtn.setEnabled(false);
-                        toIntent(SignInActivity.class);
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String UID = user.getUid();
+
+                        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(UID);
+
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("UID", UID);
+                        hashMap.put("name", name);
+
+                        databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    signUpBtn.setEnabled(false);
+                                    toIntent(SignInActivity.class);
+                                }
+                            }
+                        });
                     }
                     else {
                         Log.d("SignUpActivity", task.getException().getMessage());
