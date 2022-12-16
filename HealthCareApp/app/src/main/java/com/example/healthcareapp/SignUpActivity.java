@@ -65,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
     private View.OnClickListener signUpHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Add logics to handle Sign Up
+            createUser();
         }
     };
 
@@ -90,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
             PWInput.requestFocus();
         }
 
-        if (password == retypedPW) {
+        if (password.equals(retypedPW) && !password.isEmpty() && !retypedPW.isEmpty()) {
             try {
                 hashedPW = Utilities.hashPassword(password);
             } catch (NoSuchAlgorithmException e) {
@@ -102,6 +102,8 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        // TODO: Add logics to add user to db
+                        signUpBtn.setEnabled(false);
                         toIntent(SignInActivity.class);
                     }
                     else {
@@ -109,6 +111,10 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+        else {
+            retypePWInput.setError("Retyped password must match password");
+            retypePWInput.requestFocus();
         }
     }
 }

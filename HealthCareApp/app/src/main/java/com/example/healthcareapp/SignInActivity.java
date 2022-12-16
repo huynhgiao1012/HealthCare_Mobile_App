@@ -7,17 +7,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
     private CheckBox rememberMeCB;
-    private Button signInBtn, forgotPWBtn;
+    private Button signInBtn, forgotPWBtn, toSignUpBtn;
     private MaterialToolbar toolbar;
     private FirebaseAuth mAuth;
 
@@ -34,9 +38,11 @@ public class SignInActivity extends AppCompatActivity {
         signInBtn = findViewById(R.id.signInButton);
         forgotPWBtn = findViewById(R.id.forgotPWButton);
         toolbar = findViewById(R.id.toolbar);
+        toSignUpBtn = findViewById(R.id.toSignUpPageBtn);
 
         signInBtn.setOnClickListener(signInHandler);
         forgotPWBtn.setOnClickListener(forgotPWHandler);
+        toSignUpBtn.setOnClickListener(toSignUpHandler);
 
         toolbar.setNavigationOnClickListener(onBackPressedHandler);
     }
@@ -59,9 +65,7 @@ public class SignInActivity extends AppCompatActivity {
     private View.OnClickListener signInHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Replace this with logics that handle the authentication and submission to DB
-            Log.d("SignInAct", getInputValue(usernameInput));
-            Log.d("SignInAct", getInputValue(passwordInput));
+            signInUser();
         }
     };
 
@@ -79,4 +83,39 @@ public class SignInActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    private View.OnClickListener toSignUpHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+        }
+    };
+
+    private void signInUser() {
+        String IDNum = usernameInput.getEditText().getText().toString();
+        String password = passwordInput.getEditText().getText().toString();
+
+        if (IDNum.isEmpty()) {
+            usernameInput.setError(Utilities.setEmptyErrorText("ID number"));
+            usernameInput.requestFocus();
+        }
+        else if (password.isEmpty()) {
+            passwordInput.setError(Utilities.setEmptyErrorText("Password"));
+            passwordInput.requestFocus();
+        }
+        else {
+            mAuth.signInWithEmailAndPassword(IDNum + "@healthcareapp.com", password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        signInBtn.setEnabled(false);
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                    else {
+                        Log.d("SignInActivity", task.getException().getMessage());
+                    }
+                }
+            });
+        }
+    }
 }

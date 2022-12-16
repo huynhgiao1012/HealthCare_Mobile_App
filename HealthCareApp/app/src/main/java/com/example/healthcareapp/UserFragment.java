@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class UserFragment extends Fragment {
     private ImageView userPfp;
@@ -22,6 +23,7 @@ public class UserFragment extends Fragment {
     private MaterialButton userLogoutBtn;
     private MaterialCardView userPersonalInfo, enterSymptoms, userAbout, userSignOut;
     private Intent intent;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class UserFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
 
         userPfp = view.findViewById(R.id.userPfp);
         userName = view.findViewById(R.id.userName);
@@ -86,7 +90,8 @@ public class UserFragment extends Fragment {
     private View.OnClickListener signOutHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Add logics to handle signing out
+            mAuth.signOut();
+            startActivity(new Intent(getContext(), SignInActivity.class));
         }
     };
 }

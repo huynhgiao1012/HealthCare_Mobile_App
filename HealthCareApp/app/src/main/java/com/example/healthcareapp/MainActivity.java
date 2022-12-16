@@ -12,17 +12,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     NavigationBarView bottomNav;
     FrameLayout contentContainer;
     Fragment homeFragment, newsFragment, chatFragment, userFragment;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
 
         bottomNav = findViewById(R.id.bottomNav);
 
@@ -34,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         userFragment = new UserFragment();
 
         loadFragment(homeFragment);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+        }
     }
 
     private NavigationBarView.OnItemSelectedListener mOnItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {
