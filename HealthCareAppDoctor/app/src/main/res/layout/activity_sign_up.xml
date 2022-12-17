@@ -85,14 +85,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
-            android:text="Sign Up" />
+            android:text="Sign Up"
+            android:textSize="@dimen/button_text_size"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toSignInButton"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign In" />
+            android:text="Sign In"
+            android:textSize="@dimen/button_text_size"/>
 
     </LinearLayout>
 
