@@ -11,6 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class ChatFragment extends Fragment {
@@ -45,12 +51,25 @@ public class ChatFragment extends Fragment {
     }
 
     private void populateData() {
-        String[] doctorNames = getResources().getStringArray(R.array.doctor_names);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctors");
 
-        for (int i = 0; i < doctorNames.length; i++) {
-            doctorList.add(new Doctor(doctorNames[i]));
-        }
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                doctorList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Doctor doctor = dataSnapshot.getValue(Doctor.class);
 
-        adapter.notifyDataSetChanged();
+                    assert doctor != null;
+                    doctorList.add(doctor);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

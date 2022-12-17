@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -60,7 +61,9 @@ public class MessageActivity extends AppCompatActivity {
         messageArrayList = new ArrayList<>();
         adapter = new MessageAdapter(getApplicationContext(), messageArrayList);
         recyclerView = findViewById(R.id.chatRV);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, true));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
         populateMessage();
@@ -130,11 +133,11 @@ public class MessageActivity extends AppCompatActivity {
                 messageArrayList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Message message = dataSnapshot.getValue(Message.class);
-                    Log.d("chattest", dataSnapshot.child("msg").toString());
 
                     if (message.getReceiver().equals(patientUID) && message.getSender().equals(doctorUID)
                     || message.getReceiver().equals(doctorUID) && message.getSender().equals(patientUID)) {
-                        messageArrayList.add(0, message);
+                        messageArrayList.add(message);
+                        recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
                     }
 
                     recyclerView.getAdapter().notifyDataSetChanged();

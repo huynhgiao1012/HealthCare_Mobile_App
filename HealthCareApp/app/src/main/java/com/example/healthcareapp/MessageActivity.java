@@ -1,33 +1,41 @@
 package com.example.healthcareapp;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MessageActivity extends AppCompatActivity {
-    private MessageAdapter adapter;
-    private ArrayList<Message> msgList;
+
     private RecyclerView recyclerView;
     private MaterialToolbar toolbar;
     private DoctorInfoFragment doctorInfoFragment;
     private TextInputLayout chatTextInput;
     private MaterialButton sendBtn;
+
+    private MessageAdapter messageAdapter;
+    private ArrayList<Message> msgList;
+    private String doctorUID, patientUID, doctorName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +49,11 @@ public class MessageActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.chatTopAppBar);
 
-        Intent intent =  getIntent();
-        String doctorName = intent.getStringExtra("doctorName");
+        Intent intent = getIntent();
+        Bundle doctorInfo = intent.getBundleExtra("doctorInfo");
+        doctorName = doctorInfo.getString("name");
+        doctorUID = doctorInfo.getString("UID");
+        patientUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         toolbar.setTitle(doctorName);
         toolbar.setNavigationOnClickListener(navOnClickHandler);
@@ -57,6 +68,11 @@ public class MessageActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendButton);
 
         sendBtn.setOnClickListener(sendMsgHandler);
+
+        msgList = new ArrayList<>();
+        messageAdapter = new MessageAdapter(getApplicationContext(), msgList);
+        recyclerView.setAdapter(messageAdapter);
+        populateMessage();
     }
 
     private View.OnClickListener navOnClickHandler = new View.OnClickListener() {
@@ -83,14 +99,57 @@ public class MessageActivity extends AppCompatActivity {
         }
     };
 
-    // TODO: Add logics relates to BE
     private View.OnClickListener sendMsgHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Add logics to handle sending messages
             String msg = chatTextInput.getEditText().getText().toString();
+            if (!msg.isEmpty()) {
+                sendMsg(msg);
+            }
+            chatTextInput.getEditText().setText("");
         }
     };
+
+    private void sendMsg(String message) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        String receiver = doctorUID;
+        String sender = patientUID;
+
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("receiver", receiver);
+        hashMap.put("sender", sender);
+        hashMap.put("message", message);
+
+        databaseReference.child("Chats").push().setValue(hashMap);
+    }
+
+    private void populateMessage() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                msgList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Message message = dataSnapshot.getValue(Message.class);
+
+                    if (message.getReceiver().equals(patientUID) && message.getSender().equals(doctorUID)
+                            || message.getReceiver().equals(doctorUID) && message.getSender().equals(patientUID)) {
+                        msgList.add(message);
+                        recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+                    }
+
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     private void handleVideoCall() {
 

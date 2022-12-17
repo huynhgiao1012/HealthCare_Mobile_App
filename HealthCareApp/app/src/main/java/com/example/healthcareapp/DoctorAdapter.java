@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
         holder.name.setText(currentDoc.getName());
 
         // TODO: Replace with another method to load image more efficiently
-        holder.pfp.setImageResource(currentDoc.getPfp());
+//        holder.pfp.setImageResource(currentDoc.getPfp());
     }
 
     @Override
@@ -76,7 +77,11 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
             Doctor currentDoc = doctorList.get(getAdapterPosition());
 
             Intent intent = new Intent(context, MessageActivity.class);
-            intent.putExtra("doctorName", currentDoc.getName());
+            Bundle doctorInfo = new Bundle();
+            doctorInfo.putString("name", currentDoc.getName());
+            doctorInfo.putString("UID", currentDoc.getUID());
+            intent.putExtra("doctorInfo", doctorInfo);
+
             context.startActivity(intent);
             ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }

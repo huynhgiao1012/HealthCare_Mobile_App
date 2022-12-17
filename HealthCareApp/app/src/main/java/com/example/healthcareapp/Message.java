@@ -1,18 +1,21 @@
 package com.example.healthcareapp;
 
 public class Message {
-    private String sender, receiver, msg;
+    private String sender, receiver, message;
     private int pfp;
 
-    public Message(String sender, String receiver, String msg, int pfp) {
-        this.msg = msg;
+    public Message(String sender, String receiver, String message, int pfp) {
+        this.message = message;
         this.receiver = receiver;
         this.sender = sender;
         this.pfp = pfp;
     }
 
-    public String getMsg() {
-        return msg;
+    public Message() {
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public String getReceiver() {

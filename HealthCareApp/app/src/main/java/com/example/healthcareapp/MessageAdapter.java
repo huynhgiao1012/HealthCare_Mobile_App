@@ -10,13 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private final Context context;
     private final ArrayList<Message> msgArray;
+    private FirebaseUser currentUser;
 
-    private static final int MSG_SENDER = 0, MSG_RECEIVER = 1;
+
+    public static final int MSG_DISPLAY_LEFT = 0;
+    public static final int MSG_DISPLAY_RIGHT = 1;
 
     public MessageAdapter(Context context, ArrayList<Message> msgArray) {
         this.context = context;
@@ -38,11 +44,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void onClick(View v) {
 
         }
+    }
 
-        private int getViewType(int position) {
-            // TODO: Add logics to check if the message belongs to sender or receiver
-            // Return either MSG_SENDER or MSG_RECEIVER
-            return 0;
+    @Override
+    public int getItemViewType(int position) {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (msgArray.get(position).getSender().equals(currentUser.getUid())) {
+            return MSG_DISPLAY_RIGHT;
+        }
+        else {
+            return MSG_DISPLAY_LEFT;
         }
     }
 
@@ -50,9 +62,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == MSG_RECEIVER) {
+        if (viewType == MSG_DISPLAY_LEFT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_receive, parent, false);
-        } else {
+        }
+        else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_send, parent, false);
         }
         return new ViewHolder(view);
@@ -62,7 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
         Message currentMsg = msgArray.get(position);
 
-        holder.msg.setText(currentMsg.getMsg());
+        holder.msg.setText(currentMsg.getMessage());
 
         // TODO: Add logics to add pfp if the msg belongs to receiver
     }
