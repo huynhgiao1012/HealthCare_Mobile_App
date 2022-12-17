@@ -1,10 +1,14 @@
 package com.example.healthcareappdoctor;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -13,9 +17,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MessageActivity extends AppCompatActivity {
@@ -24,6 +32,10 @@ public class MessageActivity extends AppCompatActivity {
     private MaterialButton sendBtn;
     private TextInputLayout msgInput;
     private String patientName, patientUID;
+
+    private MessageAdapter adapter;
+    private ArrayList<Message> messageArrayList;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +56,14 @@ public class MessageActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(sendMsgHandler);
 
         msgInput = findViewById(R.id.chatInputLayout);
+
+        messageArrayList = new ArrayList<>();
+        adapter = new MessageAdapter(getApplicationContext(), messageArrayList);
+        recyclerView = findViewById(R.id.chatRV);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, true));
+        recyclerView.setAdapter(adapter);
+
+        populateMessage();
     }
 
     private View.OnClickListener navClickHandler = new View.OnClickListener() {
@@ -96,5 +116,36 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("message", message);
 
         databaseReference.child("Chats").push().setValue(hashMap);
+    }
+
+    private void populateMessage() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+
+        String doctorUID;
+        doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageArrayList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Message message = dataSnapshot.getValue(Message.class);
+                    Log.d("chattest", dataSnapshot.child("msg").toString());
+
+                    if (message.getReceiver().equals(patientUID) && message.getSender().equals(doctorUID)
+                    || message.getReceiver().equals(doctorUID) && message.getSender().equals(patientUID)) {
+                        messageArrayList.add(0, message);
+                    }
+
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

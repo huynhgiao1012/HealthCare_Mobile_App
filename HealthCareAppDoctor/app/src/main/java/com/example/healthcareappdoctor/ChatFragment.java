@@ -56,7 +56,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void populateData() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
