@@ -36,6 +36,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+
         signOutBtn = view.findViewById(R.id.signOutButton);
         signOutBtn.setOnClickListener(signOutHandler);
     }

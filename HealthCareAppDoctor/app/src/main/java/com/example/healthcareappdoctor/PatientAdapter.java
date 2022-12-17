@@ -2,6 +2,7 @@ package com.example.healthcareappdoctor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,15 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            context.startActivity(new Intent(context, MessageActivity.class));
+            Patient patient = patientArrayList.get(getAdapterPosition());
+
+            Intent intent = new Intent(context, MessageActivity.class);
+            Bundle patientInfo = new Bundle();
+            patientInfo.putString("name", patient.getName());
+            patientInfo.putString("UID", patient.getUID());
+            intent.putExtra("patientInfo", patientInfo);
+
+            context.startActivity(intent);
         }
     }
 }

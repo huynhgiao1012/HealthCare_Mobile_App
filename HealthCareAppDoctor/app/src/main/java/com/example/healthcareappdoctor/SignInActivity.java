@@ -77,12 +77,14 @@ public class SignInActivity extends AppCompatActivity {
             PWInput.requestFocus();
         }
         else {
+            signInBtn.setEnabled(false);
+
             mAuth.signInWithEmailAndPassword(IDNum + "@healthcareappdoctor.com", password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                signInBtn.setEnabled(false);
+
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }
                             else {

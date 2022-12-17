@@ -95,6 +95,8 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         if (password.equals(retypedPW) && !password.isEmpty() && !retypedPW.isEmpty()) {
+            signUpBtn.setEnabled(false);
+
             try {
                 hashedPW = Utilities.hashPassword(password);
             } catch (NoSuchAlgorithmException e) {
@@ -120,7 +122,6 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    signUpBtn.setEnabled(false);
                                     toIntent(SignInActivity.class);
                                 }
                             }
