@@ -18,7 +18,7 @@ public class MessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
         if (message.getNotification() != null) {
-            Log.d("FCM", "Remote message receive: " + message.getNotification().getBody());
+            Log.d("FCM", "Remote message receive: " + message.getNotification().getBody() + message.getMessageId());
         }
     }
 }

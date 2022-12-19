@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.healthcareapp.listeners.UsersListeners;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -35,7 +37,9 @@ public class MessageActivity extends AppCompatActivity {
 
     private MessageAdapter messageAdapter;
     private ArrayList<Message> msgList;
-    private String doctorUID, patientUID, doctorName;
+    private String doctorUID, patientUID, doctorName, doctorToken;
+
+    private UsersListeners usersListeners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class MessageActivity extends AppCompatActivity {
         Bundle doctorInfo = intent.getBundleExtra("doctorInfo");
         doctorName = doctorInfo.getString("name");
         doctorUID = doctorInfo.getString("UID");
+        doctorToken = doctorInfo.getString("token");
         patientUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         toolbar.setTitle(doctorName);
@@ -73,6 +78,8 @@ public class MessageActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(getApplicationContext(), msgList);
         recyclerView.setAdapter(messageAdapter);
         populateMessage();
+
+
     }
 
     private View.OnClickListener navOnClickHandler = new View.OnClickListener() {
@@ -91,6 +98,7 @@ public class MessageActivity extends AppCompatActivity {
                     doctorInfoFragment.show(getSupportFragmentManager(), doctorInfoFragment.getTag());
                     break;
                 case R.id.doctorCall:
+                    handleVideoCall();
                     break;
                 default:
                     return false;
@@ -152,6 +160,11 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void handleVideoCall() {
-
+        if (doctorToken != null) {
+            startActivity(new Intent(getApplicationContext(), OutgoingCallActivity.class));
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "This doctor is not available right now", Toast.LENGTH_SHORT).show();
+        }
     }
 }

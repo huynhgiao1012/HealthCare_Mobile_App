@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UserFragment extends Fragment {
     private ImageView userPfp;
@@ -90,8 +92,14 @@ public class UserFragment extends Fragment {
     private View.OnClickListener signOutHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            deleteFCMToken();
             mAuth.signOut();
             startActivity(new Intent(getContext(), SignInActivity.class));
         }
     };
+
+    private void deleteFCMToken() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
+        databaseReference.child("token").removeValue();
+    }
 }

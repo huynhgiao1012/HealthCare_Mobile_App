@@ -80,6 +80,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
             Bundle doctorInfo = new Bundle();
             doctorInfo.putString("name", currentDoc.getName());
             doctorInfo.putString("UID", currentDoc.getUID());
+            doctorInfo.putString("token", currentDoc.getToken());
             intent.putExtra("doctorInfo", doctorInfo);
 
             context.startActivity(intent);

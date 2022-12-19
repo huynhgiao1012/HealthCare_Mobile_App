@@ -2,6 +2,7 @@ package com.example.healthcareapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -11,9 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
         userFragment = new UserFragment();
 
         loadFragment(homeFragment);
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String token) {
+                saveFCMToken(token);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("FCM", e.getStackTrace().toString());
+            }
+        });
     }
 
     @Override
@@ -48,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         }
+    }
+
+    private void saveFCMToken(String token) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
+        databaseReference.child("token").setValue(token);
     }
 
     private NavigationBarView.OnItemSelectedListener mOnItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {

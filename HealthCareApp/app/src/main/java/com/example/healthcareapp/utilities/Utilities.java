@@ -1,4 +1,4 @@
-package com.example.healthcareapp;
+package com.example.healthcareapp.utilities;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
