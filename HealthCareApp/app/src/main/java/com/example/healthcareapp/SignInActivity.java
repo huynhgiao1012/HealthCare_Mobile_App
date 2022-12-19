@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.example.healthcareapp.utilities.Utilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +38,6 @@ public class SignInActivity extends AppCompatActivity {
 
         usernameInput = findViewById(R.id.IDNumField);
         passwordInput = findViewById(R.id.passwordField);
-        rememberMeCB = findViewById(R.id.rememberMeCheckBox);
         signInBtn = findViewById(R.id.signInButton);
         forgotPWBtn = findViewById(R.id.forgotPWButton);
         toolbar = findViewById(R.id.toolbar);
@@ -46,10 +48,6 @@ public class SignInActivity extends AppCompatActivity {
         toSignUpBtn.setOnClickListener(toSignUpHandler);
 
         toolbar.setNavigationOnClickListener(onBackPressedHandler);
-    }
-
-    private String getInputValue(TextInputLayout input) {
-        return input.getEditText().getText().toString();
     }
 
     @Override
@@ -113,7 +111,7 @@ public class SignInActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
                     else {
-                        Log.d("SignInActivity", task.getException().getMessage());
+                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

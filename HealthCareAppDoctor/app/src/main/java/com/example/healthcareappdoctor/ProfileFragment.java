@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
 
@@ -45,8 +47,14 @@ public class ProfileFragment extends Fragment {
     private View.OnClickListener signOutHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            deleteFCMToken();
             mAuth.signOut();
             startActivity(new Intent(getContext(), SignInActivity.class));
         }
     };
+
+    private void deleteFCMToken() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(mAuth.getUid());
+        databaseReference.child("token").removeValue();
+    }
 }

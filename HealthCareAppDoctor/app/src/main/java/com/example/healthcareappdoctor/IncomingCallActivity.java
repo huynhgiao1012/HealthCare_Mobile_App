@@ -1,4 +1,4 @@
-package com.example.healthcareapp;
+package com.example.healthcareappdoctor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class IncomingCallActivity extends AppCompatActivity {
-    private TextView doctorNameTextView;
-    private String doctorName;
+    private TextView patientNameTextView;
+    private String patientName;
     private Intent intent;
 
     @Override
@@ -17,9 +17,9 @@ public class IncomingCallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_incoming_call);
 
         intent = getIntent();
-        doctorName = intent.getStringExtra("doctorName");
+        patientName = intent.getStringExtra("patientName");
 
-        doctorNameTextView = findViewById(R.id.doctorName);
-        doctorNameTextView.setText(doctorName);
+        patientNameTextView = findViewById(R.id.patientName);
+        patientNameTextView.setText(patientName);
     }
 }

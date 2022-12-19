@@ -1,7 +1,4 @@
-package com.example.healthcareapp;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.healthcareappdoctor;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +7,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.healthcareapp.network.APIClient;
-import com.example.healthcareapp.network.APIService;
-import com.example.healthcareapp.utilities.Constants;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.healthcareappdoctor.network.APIClient;
+import com.example.healthcareappdoctor.network.APIService;
+import com.example.healthcareappdoctor.utilities.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,12 +36,11 @@ import retrofit2.Response;
 
 public class OutgoingCallActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
-    private String inviterToken = null;
-    private String receiverToken = null;
-    private String doctorName, inviterName;
+    private String inviterToken = null, receiverToken = null;
+    private String patientName, inviterName = null;
     private Intent intent;
-    private TextView doctorNameTextView;
 
+    private TextView patientNameTextView;
     private MaterialButton cancelCallBtn;
 
     @Override
@@ -59,42 +60,43 @@ public class OutgoingCallActivity extends AppCompatActivity {
             }
         });
 
-        String myUID = FirebaseAuth.getInstance().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myUID).child("name");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        // TODO: Need fixing. Retrieval is asynchronous
+        String inviterUID = FirebaseAuth.getInstance().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(inviterUID);
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                inviterName = snapshot.getValue().toString();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    inviterName = String.valueOf(task.getResult().child("name").getValue());
+                    Log.d("OutgoingAct", inviterName);
+                }
+                else {
+                    Log.d("OutgoingAct", "failed");
+                }
             }
         });
 
+
         intent = getIntent();
-        Bundle doctorInfo = intent.getBundleExtra("doctorInfo");
+        Bundle patientInfo = intent.getBundleExtra("patientInfo");
 
-        receiverToken = doctorInfo.getString("token");
-        initMeeting(receiverToken);
+        receiverToken = patientInfo.getString("token");
+        initMeeting(receiverToken, inviterName);
 
-        doctorNameTextView = findViewById(R.id.doctorName);
-        doctorName = doctorInfo.getString("name");
-        doctorNameTextView.setText(doctorName);
+        patientNameTextView = findViewById(R.id.patientName);
+        patientName = patientInfo.getString("name");
+        patientNameTextView.setText(patientName);
 
         cancelCallBtn = findViewById(R.id.cancelCallButton);
-        cancelCallBtn.setOnClickListener(declineCallHandler);
+        cancelCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
-    private View.OnClickListener declineCallHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            onBackPressed();
-        }
-    };
-
-    private void declineCall(String receiverToken) {
+    private void initMeeting(String receiverToken, String inviterName) {
         try {
             JSONArray tokens = new JSONArray();
             tokens.put(receiverToken);
@@ -102,30 +104,9 @@ public class OutgoingCallActivity extends AppCompatActivity {
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
 
-            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_DECLINE);
+            data.put(Constants.REMOTE_MSG_TYPE, "test");
             data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
-
-            body.put(Constants.REMOTE_MSG_DATA, data);
-            body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
-            sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_DECLINE);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initMeeting(String receiverToken) {
-        try {
-            JSONArray tokens = new JSONArray();
-            tokens.put(receiverToken);
-
-            JSONObject body = new JSONObject();
-            JSONObject data = new JSONObject();
-
-            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION);
-            data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
-            data.put("name", inviterName);
+            data.put("doctorName", inviterName);
 
             body.put(Constants.REMOTE_MSG_DATA, data);
             body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
@@ -144,9 +125,8 @@ public class OutgoingCallActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Calling " + doctorName, Toast.LENGTH_SHORT).show();
-                }
-                else {
+                    Toast.makeText(getApplicationContext(), "Calling " + patientName, Toast.LENGTH_SHORT).show();
+                } else {
                     Log.d("OutgoingCall", response.message());
                     finish();
                 }

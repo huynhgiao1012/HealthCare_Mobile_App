@@ -70,15 +70,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--Remember Me Checkbox-->
-        <CheckBox
-            android:id="@+id/rememberMeCheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:text="@string/remember_me_checkbox"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/forgotPWButton"
             style="@style/Widget.Material3.Button.TextButton"

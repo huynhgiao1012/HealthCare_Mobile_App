@@ -1,4 +1,4 @@
-package com.example.healthcareapp.network;
+package com.example.healthcareappdoctor.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;

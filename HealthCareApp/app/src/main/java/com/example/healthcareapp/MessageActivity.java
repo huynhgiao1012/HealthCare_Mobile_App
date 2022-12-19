@@ -161,7 +161,9 @@ public class MessageActivity extends AppCompatActivity {
 
     private void handleVideoCall() {
         if (doctorToken != null) {
-            startActivity(new Intent(getApplicationContext(), OutgoingCallActivity.class));
+            Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
+            intent.putExtra("doctorInfo", getIntent().getBundleExtra("doctorInfo"));
+            startActivity(intent);
         }
         else {
             Toast.makeText(getApplicationContext(), "This doctor is not available right now", Toast.LENGTH_SHORT).show();

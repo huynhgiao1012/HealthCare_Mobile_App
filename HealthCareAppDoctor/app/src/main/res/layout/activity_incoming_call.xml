@@ -28,7 +28,7 @@
             android:textColor="@color/secondary_40" />
 
         <TextView
-            android:id="@+id/doctorName"
+            android:id="@+id/patientName"
             style="@style/TextAppearance.Material3.HeadlineSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

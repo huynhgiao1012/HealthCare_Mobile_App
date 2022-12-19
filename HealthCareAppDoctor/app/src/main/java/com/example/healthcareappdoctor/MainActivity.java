@@ -11,10 +11,15 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +43,18 @@ public class MainActivity extends AppCompatActivity {
         profileFragment = new ProfileFragment();
 
         loadFragment(chatFragment);
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String token) {
+                saveFCMToken(token);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("FCM", e.getStackTrace().toString());
+            }
+        });
     }
 
     @Override
@@ -47,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         if (user == null) {
             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         }
+    }
+
+    private void saveFCMToken(String token) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(mAuth.getUid());
+        databaseReference.child("token").setValue(token);
     }
 
     private NavigationBarView.OnItemSelectedListener onItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {

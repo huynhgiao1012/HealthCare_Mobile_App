@@ -65,6 +65,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
             Bundle patientInfo = new Bundle();
             patientInfo.putString("name", patient.getName());
             patientInfo.putString("UID", patient.getUID());
+            patientInfo.putString("token", patient.getToken());
             intent.putExtra("patientInfo", patientInfo);
 
             context.startActivity(intent);

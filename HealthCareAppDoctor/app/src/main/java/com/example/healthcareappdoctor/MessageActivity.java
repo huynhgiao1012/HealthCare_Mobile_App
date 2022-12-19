@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -33,7 +34,7 @@ public class MessageActivity extends AppCompatActivity {
     private Intent intent;
     private MaterialButton sendBtn;
     private TextInputLayout msgInput;
-    private String patientName, patientUID;
+    private String patientName, patientUID, patientToken;
 
     private MessageAdapter adapter;
     private ArrayList<Message> messageArrayList;
@@ -50,6 +51,7 @@ public class MessageActivity extends AppCompatActivity {
         Bundle patientInfo = intent.getBundleExtra("patientInfo");
         patientName = patientInfo.getString("name");
         patientUID = patientInfo.getString("UID");
+        patientToken = patientInfo.getString("token");
 
         toolbar = findViewById(R.id.chatTopAppBar);
         toolbar.setTitle(patientName);
@@ -84,7 +86,7 @@ public class MessageActivity extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.patientCall:
-                    // TODO: Add Jitsi call logics
+                    handleVideoCall();
                     break;
 
                 case R.id.patientInfo:
@@ -152,6 +154,16 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void handleVideoCall() {
+        if (patientToken != null) {
+            Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
+            intent.putExtra("patientInfo", getIntent().getBundleExtra("patientInfo"));
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "This patient is not available right now", Toast.LENGTH_SHORT).show();
+        }
     }
 }

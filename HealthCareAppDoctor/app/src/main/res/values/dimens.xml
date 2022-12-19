@@ -3,4 +3,5 @@
     <dimen name="spacing_xl">32dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
     <dimen name="button_text_size">15sp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
 </resources>

@@ -1,11 +1,12 @@
 package com.example.healthcareappdoctor;
 
 public class Patient {
-    private String name, UID;
+    private String name, UID, token;
 
-    public Patient(String name, String UID) {
+    public Patient(String name, String UID, String token) {
         this.name = name;
         this.UID = UID;
+        this.token = token;
     }
 
     public Patient() {
@@ -19,11 +20,7 @@ public class Patient {
         return UID;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setUID(String UID) {
-        this.UID = UID;
+    public String getToken() {
+        return token;
     }
 }
