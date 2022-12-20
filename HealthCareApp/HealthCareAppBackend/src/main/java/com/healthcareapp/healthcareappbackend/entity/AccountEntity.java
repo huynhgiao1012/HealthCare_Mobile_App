@@ -45,4 +45,7 @@ public class AccountEntity {
     @OneToMany(mappedBy = "account")
     private List<MessageEntity> messageEntityList;
 
+    @OneToMany(mappedBy = "account")
+    private List<SymptomPatientEntity> symptomPatientEntityList;
+
 }
