@@ -1,6 +1,7 @@
 package com.example.healthcareappdoctor;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -99,6 +105,32 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                try {
+                                    Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/signup").buildUpon()
+                                            .appendQueryParameter("idCard", IDNumInput.getEditText().getText().toString())
+                                            .appendQueryParameter("name", nameInput.getEditText().getText().toString())
+                                            .appendQueryParameter("password", PWInput.getEditText().getText().toString())
+                                            .appendQueryParameter("role", "doctor")
+                                            .build();
+
+                                    URL obj = new URL(builtURI.toString());
+                                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                                    con.setRequestMethod("POST");
+//
+                                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                                    String inputLine;
+                                    String content = "";
+                                    while ((inputLine = in.readLine()) != null) {
+                                        content += inputLine;
+                                    }
+                                    if (content == "") {
+                                        Log.d("SignUpAct", "No id card available");
+                                    }
+                                    in.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String UID = user.getUid();
 

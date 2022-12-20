@@ -1,12 +1,21 @@
 package com.example.healthcareapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
@@ -42,6 +51,29 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             // TODO: Add logics to change PW in DB
+            try {
+                Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/forgotPassword").buildUpon()
+                        .appendQueryParameter("idCard", IDNumField.getEditText().getText().toString())
+                        .appendQueryParameter("password", newPWField.getEditText().getText().toString())
+                        .build();
+
+                URL obj = new URL(builtURI.toString());
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("PUT");
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                String content = "";
+                while ((inputLine = in.readLine()) != null) {
+                    content += inputLine;
+                }
+                if (content == "") {
+                    Log.d("ChangePwAct", "No id card available");
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 

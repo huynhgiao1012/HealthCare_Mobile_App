@@ -90,30 +90,6 @@ public class SignUpActivity extends AppCompatActivity {
             createUser();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            try {
-                Uri builtURI = Uri.parse("http://192.168.1.7:8080/api/account/getAccountByIdCard").buildUpon()
-                        .appendQueryParameter("idCard", IDNumInput.getEditText().getText().toString())
-                        .appendQueryParameter("name", nameInput.getEditText().getText().toString())
-                        .appendQueryParameter("password", PWInput.getEditText().getText().toString())
-                        .build();
-
-                URL obj = new URL(builtURI.toString());
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                con.setRequestMethod("POST");
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                String content = "";
-                while ((inputLine = in.readLine()) != null) {
-                    content += inputLine;
-                }
-                if (content == "") {
-                    Log.d("SignUpAct", "No id card available");
-                }
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     };
 
@@ -153,6 +129,32 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // TODO: Add logics to add user to db
+                        try {
+                            Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/signup").buildUpon()
+                                    .appendQueryParameter("idCard", IDNumInput.getEditText().getText().toString())
+                                    .appendQueryParameter("name", nameInput.getEditText().getText().toString())
+                                    .appendQueryParameter("password", PWInput.getEditText().getText().toString())
+                                    .appendQueryParameter("role", "patient")
+                                    .build();
+
+                            URL obj = new URL(builtURI.toString());
+                            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                            con.setRequestMethod("POST");
+
+                            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                            String inputLine;
+                            String content = "";
+                            while ((inputLine = in.readLine()) != null) {
+                                content += inputLine;
+                            }
+                            if (content == "") {
+                                Log.d("SignUpAct", "No id card available");
+                            }
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         FirebaseUser user = mAuth.getCurrentUser();
                         String UID = user.getUid();
 
