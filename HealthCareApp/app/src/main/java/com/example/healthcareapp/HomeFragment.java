@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        testBtn.setOnClickListener(testDBHander);
+
         topNewsRV = getView().findViewById(R.id.topNewsRV);
         topNewsRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -78,4 +80,11 @@ public class HomeFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
+
+    View.OnClickListener testDBHander = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+//            DBTest.testConnection();
+        }
+    };
 }

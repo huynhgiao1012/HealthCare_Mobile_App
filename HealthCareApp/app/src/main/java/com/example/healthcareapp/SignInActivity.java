@@ -1,6 +1,7 @@
 package com.example.healthcareapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
@@ -65,6 +75,29 @@ public class SignInActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             signInUser();
+            try {
+                Uri builtURI = Uri.parse("http://192.168.1.7:8080/api/account/getAccountByIdCard").buildUpon()
+                        .appendQueryParameter("idCard", usernameInput.getEditText().getText().toString())
+                        .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
+                        .build();
+
+                URL obj = new URL(builtURI.toString());
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("PUT");
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                String content = "";
+                while ((inputLine = in.readLine()) != null) {
+                    content += inputLine;
+                }
+                if (content == "") {
+                    Log.d("SignInAct", "Wrong pass or no id card available");
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -73,6 +106,29 @@ public class SignInActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
             startActivity(intent);
+            try {
+                Uri builtURI = Uri.parse("http://192.168.1.7:8080/api/account/forgotPassword").buildUpon()
+                        .appendQueryParameter("idCard", usernameInput.getEditText().getText().toString())
+                        .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
+                        .build();
+
+                URL obj = new URL(builtURI.toString());
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("PUT");
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                String content = "";
+                while ((inputLine = in.readLine()) != null) {
+                    content += inputLine;
+                }
+                if (content == "") {
+                    Log.d("SignInAct", "No id card available");
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 

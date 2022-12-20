@@ -31,6 +31,12 @@ public class NewsArticle {
         this.context = context;
     }
 
+    public NewsArticle(String newsTitle, String newsContent, int headerImage) {
+        this.newsTitle = newsTitle;
+        this.newsContent = newsContent;
+        this.headerImage = R.mipmap.ic_placeholder;
+    }
+
     public int getHeaderImage() {
         return headerImage;
     }
