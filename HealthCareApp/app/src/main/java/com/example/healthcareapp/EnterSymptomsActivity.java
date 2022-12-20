@@ -12,6 +12,9 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class EnterSymptomsActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
     private TextInputLayout symptomNameField, descriptionField;
