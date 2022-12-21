@@ -1,10 +1,10 @@
 package com.example.healthcareappdoctor;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthcareappdoctor.network.APIClient;
 import com.example.healthcareappdoctor.network.APIService;
@@ -23,10 +24,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -68,7 +67,6 @@ public class OutgoingCallActivity extends AppCompatActivity {
             }
         });
 
-        Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -80,22 +78,9 @@ public class OutgoingCallActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             inviterName = String.valueOf(task.getResult().child("name").getValue());
                             initMeeting(receiverToken, inviterName);
-                        }
-                        else {
+                        } else {
                             Log.d("OutgoingAct", "failed");
                         }
-                    }
-                });
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        if (inviterName != null) {
-//                            Log.d("OutgoingAct", inviterName);
-//                        }
-//                        else {
-//                            Log.d("OutgoingAct", "null inviterName");
-//                        }
                     }
                 });
             }
@@ -109,7 +94,7 @@ public class OutgoingCallActivity extends AppCompatActivity {
         cancelCallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                cancelMeeting(receiverToken);
             }
         });
     }
@@ -136,6 +121,27 @@ public class OutgoingCallActivity extends AppCompatActivity {
         }
     }
 
+    public void cancelMeeting(String receiverToken) {
+        try {
+            JSONArray tokens = new JSONArray();
+            tokens.put(receiverToken);
+
+            JSONObject body = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION_RESPONSE);
+            data.put(Constants.REMOTE_MSG_INVITATION_RESPONSE, Constants.REMOTE_MSG_INVITATION_CANCELLED);
+
+            body.put(Constants.REMOTE_MSG_DATA, data);
+            body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+
+            sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION_RESPONSE);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendRemoteMessage(String remoteMessageBody, String type) {
         APIClient.getClient().create(APIService.class).sendRemoteMessage(
                 Constants.getRemoteMessageHeaders(), remoteMessageBody
@@ -143,7 +149,12 @@ public class OutgoingCallActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Calling " + patientName, Toast.LENGTH_SHORT).show();
+                    if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
+                        Toast.makeText(getApplicationContext(), "Calling " + patientName, Toast.LENGTH_SHORT).show();
+                    } else if (type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE)) {
+                        Toast.makeText(getApplicationContext(), "Invitation cancelled", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 } else {
                     Log.d("OutgoingCall", response.message());
                     finish();
@@ -158,7 +169,33 @@ public class OutgoingCallActivity extends AppCompatActivity {
         });
     }
 
-    private void test(String string) {
-        Log.d("OutgoingAct", string);
+    private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String type = intent.getStringExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE);
+            if (type.equals(Constants.REMOTE_MSG_INVITATION_ACCEPTED)) {
+                Toast.makeText(getApplicationContext(), "Invitation accepted", Toast.LENGTH_SHORT).show();
+            } else if (type.equals(Constants.REMOTE_MSG_INVITATION_REJECTED)) {
+                Toast.makeText(getApplicationContext(), "Invitation rejected", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                invitationResponseReceiver,
+                new IntentFilter(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(
+                invitationResponseReceiver
+        );
     }
 }

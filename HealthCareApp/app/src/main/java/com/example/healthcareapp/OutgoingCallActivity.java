@@ -1,15 +1,18 @@
 package com.example.healthcareapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthcareapp.network.APIClient;
 import com.example.healthcareapp.network.APIService;
@@ -21,10 +24,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -50,7 +51,10 @@ public class OutgoingCallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outgoing_call);
 
-        Handler handler = new Handler();
+        intent = getIntent();
+        Bundle doctorInfo = intent.getBundleExtra("doctorInfo");
+        receiverToken = doctorInfo.getString("token");
+        doctorName = doctorInfo.getString("name");
 
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
@@ -67,32 +71,24 @@ public class OutgoingCallActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String myUID = FirebaseAuth.getInstance().getUid();
-                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myUID).child("name");
+                String inviterUID = FirebaseAuth.getInstance().getUid();
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(inviterUID);
                 databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
-                            inviterName = task.getResult().toString();
-                        }
-                        else {
-
+                            inviterName = String.valueOf(task.getResult().child("name").getValue());
+                            initMeeting(receiverToken, inviterName);
+                        } else {
+                            Log.d("OutgoingAct", "failed");
                         }
                     }
                 });
             }
         });
-
         thread.start();
 
-        intent = getIntent();
-        Bundle doctorInfo = intent.getBundleExtra("doctorInfo");
-
-        receiverToken = doctorInfo.getString("token");
-        initMeeting(receiverToken);
-
         doctorNameTextView = findViewById(R.id.doctorName);
-        doctorName = doctorInfo.getString("name");
         doctorNameTextView.setText(doctorName);
 
         cancelCallBtn = findViewById(R.id.cancelCallButton);
@@ -102,11 +98,11 @@ public class OutgoingCallActivity extends AppCompatActivity {
     private View.OnClickListener declineCallHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            onBackPressed();
+            cancelMeeting(receiverToken);
         }
     };
 
-    private void declineCall(String receiverToken) {
+    private void cancelMeeting(String receiverToken) {
         try {
             JSONArray tokens = new JSONArray();
             tokens.put(receiverToken);
@@ -114,20 +110,20 @@ public class OutgoingCallActivity extends AppCompatActivity {
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
 
-            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_DECLINE);
-            data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
+            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION_RESPONSE);
+            data.put(Constants.REMOTE_MSG_INVITATION_RESPONSE, Constants.REMOTE_MSG_INVITATION_CANCELLED);
 
             body.put(Constants.REMOTE_MSG_DATA, data);
             body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
 
-            sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_DECLINE);
+            sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION_RESPONSE);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void initMeeting(String receiverToken) {
+    private void initMeeting(String receiverToken, String inviterName) {
         try {
             JSONArray tokens = new JSONArray();
             tokens.put(receiverToken);
@@ -137,7 +133,7 @@ public class OutgoingCallActivity extends AppCompatActivity {
 
             data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION);
             data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
-            data.put("name", inviterName);
+            data.put("patientName", inviterName);
 
             body.put(Constants.REMOTE_MSG_DATA, data);
             body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
@@ -156,9 +152,13 @@ public class OutgoingCallActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Calling " + doctorName, Toast.LENGTH_SHORT).show();
-                }
-                else {
+                    if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
+                        Toast.makeText(getApplicationContext(), "Calling " + doctorName, Toast.LENGTH_SHORT).show();
+                    } else if (type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE)) {
+                        Toast.makeText(getApplicationContext(), "Invitation cancelled", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
                     Log.d("OutgoingCall", response.message());
                     finish();
                 }
@@ -170,5 +170,37 @@ public class OutgoingCallActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String type = intent.getStringExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE);
+            if (type != null) {
+                if (type.equals(Constants.REMOTE_MSG_INVITATION_ACCEPTED)) {
+                    Toast.makeText(getApplicationContext(), "Invitation accepted", Toast.LENGTH_SHORT).show();
+                } else if (type.equals(Constants.REMOTE_MSG_INVITATION_REJECTED)) {
+                    Toast.makeText(getApplicationContext(), "Invitation accepted", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                invitationResponseReceiver,
+                new IntentFilter(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(
+                invitationResponseReceiver
+        );
     }
 }
