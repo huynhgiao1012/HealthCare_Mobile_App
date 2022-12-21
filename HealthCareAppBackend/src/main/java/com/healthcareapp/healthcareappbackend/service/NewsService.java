@@ -62,10 +62,11 @@ public class NewsService {
         JSONObject json = new JSONObject(content);
         JSONArray newsList = json.getJSONArray("articles");
 
-        NewsDto newsDto = new NewsDto();
         Instant instant = null;
         for (int i=0; i<newsList.length(); i++) {
             JSONObject news = newsList.getJSONObject(i);
+
+            NewsDto newsDto = new NewsDto();
 
             newsDto.setTitle(String.valueOf(news.get("title")));
             newsDto.setDescription(String.valueOf(news.get("description")));
