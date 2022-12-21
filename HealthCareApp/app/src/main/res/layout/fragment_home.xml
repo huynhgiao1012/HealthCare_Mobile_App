@@ -19,36 +19,10 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toSignInPageBtn"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title_text"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:text="@string/sign_in_text" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toSignUpPageBtn"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_up_text"
-            android:layout_below="@id/toSignInPageBtn"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/testBtn"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Test DB"
-            android:layout_below="@id/toSignUpPageBtn"
-            android:layout_marginBottom="@dimen/spacing_medium"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/testBtn"
+            android:layout_below="@id/title_text"
             android:id="@+id/topNewsRV"/>
     </RelativeLayout>
 

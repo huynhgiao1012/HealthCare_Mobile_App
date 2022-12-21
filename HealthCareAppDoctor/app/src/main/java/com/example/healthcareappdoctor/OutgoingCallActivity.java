@@ -1,7 +1,10 @@
 package com.example.healthcareappdoctor;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -48,6 +51,11 @@ public class OutgoingCallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outgoing_call);
 
+        intent = getIntent();
+        Bundle patientInfo = intent.getBundleExtra("patientInfo");
+        receiverToken = patientInfo.getString("token");
+        patientName = patientInfo.getString("name");
+
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String token) {
@@ -60,31 +68,41 @@ public class OutgoingCallActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: Need fixing. Retrieval is asynchronous
-        String inviterUID = FirebaseAuth.getInstance().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(inviterUID);
-        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Handler handler = new Handler();
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    inviterName = String.valueOf(task.getResult().child("name").getValue());
-                    Log.d("OutgoingAct", inviterName);
-                }
-                else {
-                    Log.d("OutgoingAct", "failed");
-                }
+            public void run() {
+                String inviterUID = FirebaseAuth.getInstance().getUid();
+                databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(inviterUID);
+                databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            inviterName = String.valueOf(task.getResult().child("name").getValue());
+                            initMeeting(receiverToken, inviterName);
+                        }
+                        else {
+                            Log.d("OutgoingAct", "failed");
+                        }
+                    }
+                });
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        if (inviterName != null) {
+//                            Log.d("OutgoingAct", inviterName);
+//                        }
+//                        else {
+//                            Log.d("OutgoingAct", "null inviterName");
+//                        }
+                    }
+                });
             }
         });
-
-
-        intent = getIntent();
-        Bundle patientInfo = intent.getBundleExtra("patientInfo");
-
-        receiverToken = patientInfo.getString("token");
-        initMeeting(receiverToken, inviterName);
+        thread.start();
 
         patientNameTextView = findViewById(R.id.patientName);
-        patientName = patientInfo.getString("name");
         patientNameTextView.setText(patientName);
 
         cancelCallBtn = findViewById(R.id.cancelCallButton);
@@ -104,7 +122,7 @@ public class OutgoingCallActivity extends AppCompatActivity {
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
 
-            data.put(Constants.REMOTE_MSG_TYPE, "test");
+            data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION);
             data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
             data.put("doctorName", inviterName);
 
@@ -138,5 +156,9 @@ public class OutgoingCallActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void test(String string) {
+        Log.d("OutgoingAct", string);
     }
 }

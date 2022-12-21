@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,8 +14,10 @@ import android.widget.Toast;
 import com.example.healthcareapp.network.APIClient;
 import com.example.healthcareapp.network.APIService;
 import com.example.healthcareapp.utilities.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +50,8 @@ public class OutgoingCallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outgoing_call);
 
+        Handler handler = new Handler();
+
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String token) {
@@ -59,19 +64,26 @@ public class OutgoingCallActivity extends AppCompatActivity {
             }
         });
 
-        String myUID = FirebaseAuth.getInstance().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myUID).child("name");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                inviterName = snapshot.getValue().toString();
-            }
+            public void run() {
+                String myUID = FirebaseAuth.getInstance().getUid();
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myUID).child("name");
+                databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            inviterName = task.getResult().toString();
+                        }
+                        else {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                        }
+                    }
+                });
             }
         });
+
+        thread.start();
 
         intent = getIntent();
         Bundle doctorInfo = intent.getBundleExtra("doctorInfo");

@@ -1,6 +1,9 @@
 package com.example.healthcareapp;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +53,7 @@ public class NewsFragment extends Fragment {
         adapter = new NewsAdapter(this.getContext(), newsArticles);
         recyclerView.setAdapter(adapter);
 
+        Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -58,15 +62,21 @@ public class NewsFragment extends Fragment {
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
         thread.start();
 
     }
 
-    // TODO: Replace this method with logics that pull data from articles' API
     private void populateData() throws IOException, JSONException {
-        String GET_URL = "http://192.168.1.4:8080/api/news/getNewsFromApi";
+        String GET_URL = "http://192.168.1.12:8080/api/news/getNewsFromApi";
         URL obj = new URL(GET_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -77,16 +87,19 @@ public class NewsFragment extends Fragment {
         while ((inputLine = in.readLine()) != null) {
             content += inputLine;
         }
+        Log.d("News", content);
         JSONArray newsList = new JSONArray(content);
 
         for (int i = 0; i < newsList.length(); i++) {
             JSONObject news = newsList.getJSONObject(i);
 
-            newsArticles.add(new NewsArticle(news.getString("title"), news.getString("description"), 0));
+            newsArticles.add(new NewsArticle(
+                    news.getString("title"),
+                    news.getString("description"),
+                    0));
         }
         in.close();
-
-
-        adapter.notifyDataSetChanged();
     }
+
+
 }

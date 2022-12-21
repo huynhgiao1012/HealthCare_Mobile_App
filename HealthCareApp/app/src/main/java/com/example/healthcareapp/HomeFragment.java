@@ -2,6 +2,8 @@ package com.example.healthcareapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +15,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    private Button toSignInPg, toSignUpPg, testBtn;
     private RecyclerView topNewsRV;
     private ArrayList<NewsArticle> topNewsList;
     private TopNewsAdapter adapter;
@@ -36,26 +46,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toSignInPg = getView().findViewById(R.id.toSignInPageBtn);
-        toSignUpPg = getView().findViewById(R.id.toSignUpPageBtn);
-        testBtn = getView().findViewById(R.id.testBtn);
-
-        toSignInPg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toIntent(SignInActivity.class);
-            }
-        });
-
-        toSignUpPg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toIntent(SignUpActivity.class);
-            }
-        });
-
-        testBtn.setOnClickListener(testDBHander);
-
         topNewsRV = getView().findViewById(R.id.topNewsRV);
         topNewsRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -63,7 +53,25 @@ public class HomeFragment extends Fragment {
         adapter = new TopNewsAdapter(getContext(), topNewsList);
         topNewsRV.setAdapter(adapter);
 
-        populateData();
+        Handler handler = new Handler();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    populateData();
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        thread.start();
     }
 
     private void toIntent(Class activityClass) {
@@ -71,20 +79,29 @@ public class HomeFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void populateData() {
-        String[] titles = getResources().getStringArray(R.array.news_titles);
+    private void populateData() throws IOException, JSONException {
+        String GET_URL = "http://192.168.1.12:8080/api/news/getNewsFromApi";
+        URL obj = new URL(GET_URL);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
 
-        for (int i = 0; i < titles.length; i++) {
-            topNewsList.add(new NewsArticle(getContext(), titles[i]));
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        String content = "";
+        while ((inputLine = in.readLine()) != null) {
+            content += inputLine;
         }
+        Log.d("News", content);
+        JSONArray newsList = new JSONArray(content);
 
-        adapter.notifyDataSetChanged();
+        for (int i = 0; i < newsList.length(); i++) {
+            JSONObject news = newsList.getJSONObject(i);
+
+            topNewsList.add(new NewsArticle(
+                    news.getString("title"),
+                    news.getString("description"),
+                    0));
+        }
+        in.close();
     }
-
-    View.OnClickListener testDBHander = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-//            DBTest.testConnection();
-        }
-    };
 }

@@ -113,13 +113,15 @@ public class SignInActivity extends AppCompatActivity {
             passwordInput.requestFocus();
         }
         else {
+            signInBtn.setEnabled(false);
+
             mAuth.signInWithEmailAndPassword(IDNum + "@healthcareapp.com", password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         try {
-                            Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/getAccountByIdCard").buildUpon()
-                                    .appendQueryParameter("idCard", usernameInput.getEditText().getText().toString())
+                            Uri builtURI = Uri.parse("http://localhost:8080/api/account/getAccountByIdCard").buildUpon()
+                                    .appendQueryParameter("idCard", IDNum)
                                     .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
                                     .build();
 
@@ -140,7 +142,7 @@ public class SignInActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        signInBtn.setEnabled(false);
+
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
                     else {
