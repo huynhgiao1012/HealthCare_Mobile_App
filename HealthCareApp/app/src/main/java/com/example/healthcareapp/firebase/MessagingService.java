@@ -30,7 +30,14 @@ public class MessagingService extends FirebaseMessagingService {
                 Intent intent = new Intent(getApplicationContext(), IncomingCallActivity.class);
 
                 intent.putExtra("doctorName", message.getData().get("doctorName"));
-                intent.putExtra(Constants.REMOTE_MSG_INVITER_TOKEN, message.getData().get(Constants.REMOTE_MSG_INVITER_TOKEN));
+                intent.putExtra(
+                        Constants.REMOTE_MSG_INVITER_TOKEN,
+                        message.getData().get(Constants.REMOTE_MSG_INVITER_TOKEN)
+                );
+                intent.putExtra(
+                        Constants.REMOTE_MSG_MEETING_ROOM,
+                        message.getData().get(Constants.REMOTE_MSG_MEETING_ROOM)
+                );
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

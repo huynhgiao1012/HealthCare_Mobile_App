@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -30,7 +31,6 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
 
     NavigationBarView bottomNav;
-    FrameLayout contentContainer;
     Fragment homeFragment, newsFragment, chatFragment, userFragment;
     FirebaseAuth mAuth;
 
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -75,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveFCMToken(String token) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
-        databaseReference.child("token").setValue(token);
+        if (mAuth != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
+            databaseReference.child("token").setValue(token);
+        }
     }
 
     private NavigationBarView.OnItemSelectedListener mOnItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {

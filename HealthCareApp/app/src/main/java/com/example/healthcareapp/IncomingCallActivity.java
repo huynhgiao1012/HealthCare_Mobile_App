@@ -18,9 +18,13 @@ import com.example.healthcareapp.network.APIService;
 import com.example.healthcareapp.utilities.Constants;
 import com.google.android.material.button.MaterialButton;
 
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +33,7 @@ import retrofit2.Response;
 public class IncomingCallActivity extends AppCompatActivity {
     private TextView doctorNameTextView;
     private String doctorName, inviterToken;
+    private String meetingRoom;
     private Intent intent;
 
     private MaterialButton acceptCallBtn, rejectCallBtn;
@@ -40,6 +45,7 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         intent = getIntent();
         doctorName = intent.getStringExtra("doctorName");
+        meetingRoom = intent.getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM);
 
         doctorNameTextView = findViewById(R.id.doctorName);
         doctorNameTextView.setText(doctorName);
@@ -82,15 +88,28 @@ public class IncomingCallActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     if (type.equals(Constants.REMOTE_MSG_INVITATION_ACCEPTED)) {
-                        Toast.makeText(getApplicationContext(), "Invitation accepted", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            URL url = new URL("https://meet.jit.si");
+                            JitsiMeetConferenceOptions conferenceOptions =
+                                    new JitsiMeetConferenceOptions.Builder()
+                                            .setServerURL(url)
+                                            .setRoom(meetingRoom)
+                                            .build();
+                            JitsiMeetActivity.launch(getApplicationContext(), conferenceOptions);
+                            finish();
+                        }catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Invitation rejected", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 } else {
                     Log.d("IncomingCall", response.message());
                 }
-                finish();
             }
 
             @Override
@@ -121,6 +140,7 @@ public class IncomingCallActivity extends AppCompatActivity {
             if (type != null) {
                 if (type.equals(Constants.REMOTE_MSG_INVITATION_CANCELLED)) {
                     Toast.makeText(getApplicationContext(), "Invitation cancelled", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         }

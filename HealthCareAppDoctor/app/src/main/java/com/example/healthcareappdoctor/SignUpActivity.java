@@ -39,8 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         mAuth = FirebaseAuth.getInstance();
 
         IDNumInput = findViewById(R.id.IDNumInput);

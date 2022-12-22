@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.healthcareapp"
-        minSdk 22
+        minSdk 29
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -52,5 +52,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-//    implementation ('org.jitsi.react:jitsi-meet-sdk:+') { transitive = true }
+    implementation ('org.jitsi.react:jitsi-meet-sdk:+') { transitive = true }
 }

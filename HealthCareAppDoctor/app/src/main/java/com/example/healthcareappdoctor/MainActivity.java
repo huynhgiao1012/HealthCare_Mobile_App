@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("FCM", e.getStackTrace().toString());
+                Toast.makeText(getApplicationContext(), "Can't save FCM token", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -67,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveFCMToken(String token) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(mAuth.getUid());
-        databaseReference.child("token").setValue(token);
+        if (mAuth.getUid() != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctors").child(mAuth.getUid());
+            databaseReference.child("token").setValue(token);
+        }
     }
 
     private NavigationBarView.OnItemSelectedListener onItemSelectedListener = new NavigationBarView.OnItemSelectedListener() {

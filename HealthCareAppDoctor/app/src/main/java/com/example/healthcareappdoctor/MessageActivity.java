@@ -46,8 +46,6 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         intent = getIntent();
         Bundle patientInfo = intent.getBundleExtra("patientInfo");
         patientName = patientInfo.getString("name");

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,14 +16,10 @@ import com.example.healthcareapp.utilities.Utilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -107,45 +102,52 @@ public class SignInActivity extends AppCompatActivity {
         if (IDNum.isEmpty()) {
             usernameInput.setError(Utilities.setEmptyErrorText("ID number"));
             usernameInput.requestFocus();
-        }
-        else if (password.isEmpty()) {
+        } else if (password.isEmpty()) {
             passwordInput.setError(Utilities.setEmptyErrorText("Password"));
             passwordInput.requestFocus();
-        }
-        else {
+        } else {
             signInBtn.setEnabled(false);
 
             mAuth.signInWithEmailAndPassword(IDNum + "@healthcareapp.com", password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        try {
-                            Uri builtURI = Uri.parse("http://localhost:8080/api/account/getAccountByIdCard").buildUpon()
-                                    .appendQueryParameter("idCard", IDNum)
-                                    .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
-                                    .build();
 
-                            URL obj = new URL(builtURI.toString());
-                            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                            con.setRequestMethod("PUT");
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                            String inputLine;
-                            String content = "";
-                            while ((inputLine = in.readLine()) != null) {
-                                content += inputLine;
+                                try {
+
+                                    Uri builtURI = Uri.parse("http://localhost:8080/api/account/getAccountByIdCard").buildUpon()
+                                            .appendQueryParameter("idCard", IDNum)
+                                            .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
+                                            .build();
+
+                                    URL obj = new URL(builtURI.toString());
+                                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                                    con.setRequestMethod("PUT");
+
+                                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                                    String inputLine;
+                                    String content = "";
+                                    while ((inputLine = in.readLine()) != null) {
+                                        content += inputLine;
+                                    }
+                                    if (content == "") {
+                                        Log.d("SignInAct", "No id card available");
+                                    }
+                                    in.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
-                            if (content == "") {
-                                Log.d("SignInAct", "No id card available");
-                            }
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        });
+                        thread.start();
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
