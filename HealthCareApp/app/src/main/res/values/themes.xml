@@ -32,14 +32,16 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="Theme.HealthCareApp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="Theme.HealthCareApp.AppBarOverlay"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.HealthCareApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.HealthCareApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    
+
     <style name="MaterialToolbarStyle" parent="Theme.Material3.Light">
         <item name="android:textColorPrimary">@color/md_theme_light_onSecondaryContainer</item>
         <item name="android:textColorSecondary">@color/md_theme_light_onSecondaryContainer</item>
@@ -47,10 +49,15 @@
         <item name="iconTint">@color/md_theme_light_onSecondaryContainer</item>
         <item name="navigationIconTint">@color/md_theme_light_onSecondaryContainer</item>
     </style>
-    
+
     <style name="ProfileBanner" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">0dp</item>
         <item name="cornerSizeTopRight">0dp</item>
+    </style>
+
+    <style name="ProfileBanner.32dp" parent="ProfileBanner">
+        <item name="cornerSizeBottomLeft">32dp</item>
+        <item name="cornerSizeBottomRight">32dp</item>
     </style>
 </resources>

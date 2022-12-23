@@ -4,7 +4,9 @@
     style="@style/Widget.Material3.CardView.Elevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_small"
+    android:layout_marginStart="@dimen/spacing_xl"
+    android:layout_marginTop="@dimen/spacing_xl"
+    android:layout_marginEnd="@dimen/spacing_xl"
     android:backgroundTint="@color/md_theme_light_secondaryContainer">
 
     <RelativeLayout
@@ -29,7 +31,7 @@
 
             <TextView
                 android:id="@+id/newsTitle"
-                style="@style/TextAppearance.Material3.HeadlineLarge"
+                style="@style/TextAppearance.Material3.HeadlineSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_small"
@@ -38,11 +40,11 @@
 
             <TextView
                 android:id="@+id/newsContent"
-                style="@style/TextAppearance.Material3.BodyLarge"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/newsTitle"
-                android:layout_marginBottom="@dimen/spacing_xl"
+                android:layout_marginBottom="@dimen/spacing_medium"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="@string/lorem_ipsum_text"
@@ -53,8 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/newsContent"
-                android:layout_marginBottom="@dimen/spacing_xl"
-                app:dividerColor="@color/md_theme_light_onSecondaryContainer"/>
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:dividerColor="@color/md_theme_light_onSecondaryContainer" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/shareArticleButton"

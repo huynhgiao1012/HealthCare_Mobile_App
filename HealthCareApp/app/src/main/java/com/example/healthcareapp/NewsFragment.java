@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.healthcareapp.utilities.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +78,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void populateData() throws IOException, JSONException {
-        String GET_URL = "http://192.168.1.12:8080/api/news/getNewsFromApi";
+        String GET_URL = "http://" + Constants.IP_ADDRESS + ":8080/api/news/getNewsFromApi";
         URL obj = new URL(GET_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");

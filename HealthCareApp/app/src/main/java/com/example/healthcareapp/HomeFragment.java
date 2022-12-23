@@ -12,8 +12,14 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.healthcareapp.utilities.Constants;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +37,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView topNewsRV;
     private ArrayList<NewsArticle> topNewsList;
     private TopNewsAdapter adapter;
+    private MaterialCardView toUserInfo, toAddSymptoms, toCallDoctor;
+    private NavigationBarView parentBottomNav;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,16 @@ public class HomeFragment extends Fragment {
         adapter = new TopNewsAdapter(getContext(), topNewsList);
         topNewsRV.setAdapter(adapter);
 
+        toUserInfo = view.findViewById(R.id.toUserInfoCard);
+        toAddSymptoms = view.findViewById(R.id.toAddSymptomsCard);
+        toCallDoctor = view.findViewById(R.id.toCallDoctorCard);
+
+        toUserInfo.setOnClickListener(toUserInfoHandler);
+        toAddSymptoms.setOnClickListener(toAddSymptomsHandler);
+        toCallDoctor.setOnClickListener(toCallDoctorHandler);
+
+        parentBottomNav = view.getRootView().findViewById(R.id.bottomNav);
+
         Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -74,13 +92,8 @@ public class HomeFragment extends Fragment {
         thread.start();
     }
 
-    private void toIntent(Class activityClass) {
-        Intent intent = new Intent(getActivity(), activityClass);
-        startActivity(intent);
-    }
-
     private void populateData() throws IOException, JSONException {
-        String GET_URL = "http://192.168.1.12:8080/api/news/getNewsFromApi";
+        String GET_URL = "http://" + Constants.IP_ADDRESS + ":8080/api/news/getNewsFromApi";
         URL obj = new URL(GET_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -104,4 +117,30 @@ public class HomeFragment extends Fragment {
         }
         in.close();
     }
+
+    private View.OnClickListener toUserInfoHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(getContext(), PersonalInfoActivity.class));
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    };
+
+    private View.OnClickListener toAddSymptomsHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(getContext(), EnterSymptomsActivity.class));
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    };
+
+    private View.OnClickListener toCallDoctorHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            parentBottomNav.setSelectedItemId(R.id.chatItem);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.contentContainer, new ChatFragment());
+            transaction.commit();
+        }
+    };
 }

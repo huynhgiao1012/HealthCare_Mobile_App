@@ -8,7 +8,6 @@ public class Constants {
 
     public static final String REMOTE_MSG_TYPE = "type";
     public static final String REMOTE_MSG_INVITATION = "invitation";
-    public static final String REMOTE_MSG_DECLINE = "decline";
     public static final String REMOTE_MSG_INVITER_TOKEN = "inviterToken";
     public static final String REMOTE_MSG_DATA = "data";
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
@@ -19,6 +18,8 @@ public class Constants {
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
 
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
+
+    public static final String IP_ADDRESS = "10.238.46.176";
 
     public static HashMap<String, String> getRemoteMessageHeaders() {
         HashMap<String, String> headers = new HashMap<>();

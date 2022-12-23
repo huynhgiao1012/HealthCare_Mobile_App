@@ -26,10 +26,12 @@
 
             <TextView
                 android:id="@+id/newsTitle"
-                style="@style/TextAppearance.Material3.HeadlineSmall"
+                style="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_medium"
+                android:ellipsize="end"
+                android:maxLines="4"
                 android:text="Title"
                 android:textColor="@color/md_theme_light_onSecondaryContainer" />
 
