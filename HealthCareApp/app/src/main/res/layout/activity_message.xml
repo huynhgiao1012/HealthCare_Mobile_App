@@ -14,12 +14,14 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/md_theme_light_secondaryContainer">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/chatTopAppBar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:theme="@style/MaterialToolbarStyle"
                 app:menu="@menu/doctor_chat_menu"
                 app:navigationIcon="@drawable/ic_back_24dp"
                 app:title="Test"
@@ -36,12 +38,12 @@
                 android:id="@+id/chatRV"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/purple_200" />
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/md_theme_light_secondaryContainer"
                 android:orientation="horizontal"
                 android:padding="@dimen/spacing_xl">
 
@@ -64,7 +66,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/sendButton"
-                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_medium"

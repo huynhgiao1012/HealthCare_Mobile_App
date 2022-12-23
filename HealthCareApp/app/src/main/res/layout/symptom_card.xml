@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_xl">
+    android:layout_marginBottom="@dimen/spacing_xl"
+    android:backgroundTint="@color/md_theme_light_secondaryContainer">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
-            android:text="Symptom Name" />
+            android:text="Symptom Name"
+            android:textColor="@color/md_theme_light_onSecondaryContainer" />
 
         <TextView
             android:id="@+id/symptomDescription"
@@ -25,7 +28,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@string/lorem_ipsum_text" />
+            android:text="@string/lorem_ipsum_text"
+            android:textColor="@color/md_theme_light_onSecondaryContainer" />
 
     </LinearLayout>
 

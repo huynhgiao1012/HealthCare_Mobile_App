@@ -9,55 +9,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/md_theme_light_surfaceVariant"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_200"
-            android:padding="@dimen/spacing_xl">
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:theme="@style/ProfileBanner"
+            app:cardElevation="16dp">
 
-            <ImageView
-                android:id="@+id/userPfp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:id="@+id/userName"
-                style="@style/TextAppearance.Material3.HeadlineSmall"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_medium"
-                android:layout_toEndOf="@id/userPfp"
-                android:text="Name"
-                android:textColor="@android:color/white" />
+                android:padding="@dimen/spacing_xl">
 
-            <TextView
-                android:id="@+id/userPhone"
-                style="@style/TextAppearance.Material3.BodyLarge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/userName"
-                android:layout_marginStart="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:layout_toEndOf="@id/userPfp"
-                android:text="Phone"
-                android:textColor="@android:color/white" />
+                <ImageView
+                    android:id="@+id/userPfp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher_round" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/userLogoutButton"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:scaleX="1.5"
-                android:scaleY="1.5"
-                app:icon="@drawable/ic_logout_24dp"
-                app:iconTint="@android:color/white" />
+                <TextView
+                    android:id="@+id/userName"
+                    style="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_toEndOf="@id/userPfp"
+                    android:text="Name"
+                    android:textColor="@android:color/white" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/userPhone"
+                    style="@style/TextAppearance.Material3.BodyLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/userName"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_toEndOf="@id/userPfp"
+                    android:text="Phone"
+                    android:textColor="@android:color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/userLogoutButton"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:icon="@drawable/ic_logout_24dp"
+                    app:iconTint="@android:color/white" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,14 +89,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:text="Personal information" />
+                    android:text="Personal information"
+                    android:textColor="@color/md_theme_light_onSurface" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:src="@drawable/ic_forward_24dp" />
+                    android:src="@drawable/ic_forward_24dp"
+                    app:tint="@color/md_theme_light_onSurface" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -108,14 +121,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:text="Enter Symptoms" />
+                    android:text="Enter Symptoms"
+                    android:textColor="@color/md_theme_light_onSurface" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:src="@drawable/ic_forward_24dp" />
+                    android:src="@drawable/ic_forward_24dp"
+                    app:tint="@color/md_theme_light_onSurface" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -138,14 +153,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:text="About" />
+                    android:text="About"
+                    android:textColor="@color/md_theme_light_onSurface" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:src="@drawable/ic_forward_24dp" />
+                    android:src="@drawable/ic_forward_24dp"
+                    app:tint="@color/md_theme_light_onSurface" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -168,14 +185,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:text="Sign out" />
+                    android:text="Sign out"
+                    android:textColor="@color/md_theme_light_onSurface" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_margin="@dimen/spacing_medium"
-                    android:src="@drawable/ic_forward_24dp" />
+                    android:src="@drawable/ic_forward_24dp"
+                    app:tint="@color/md_theme_light_onSurface" />
 
             </com.google.android.material.card.MaterialCardView>
 
