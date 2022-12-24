@@ -89,7 +89,6 @@ public class NewsFragment extends Fragment {
         while ((inputLine = in.readLine()) != null) {
             content += inputLine;
         }
-        Log.d("News", content);
         JSONArray newsList = new JSONArray(content);
 
         for (int i = 0; i < newsList.length(); i++) {

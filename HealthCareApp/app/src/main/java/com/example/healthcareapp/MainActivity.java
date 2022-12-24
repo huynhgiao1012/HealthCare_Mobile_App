@@ -2,10 +2,12 @@ package com.example.healthcareapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
@@ -30,9 +33,10 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    NavigationBarView bottomNav;
-    Fragment homeFragment, newsFragment, chatFragment, userFragment;
-    FirebaseAuth mAuth;
+    private NavigationBarView bottomNav;
+    private Fragment homeFragment, newsFragment, chatFragment, userFragment;
+    private FirebaseAuth mAuth;
+    private String patientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveFCMToken(String token) {
-        if (mAuth != null) {
+        if (mAuth.getUid() != null) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
             databaseReference.child("token").setValue(token);
         }

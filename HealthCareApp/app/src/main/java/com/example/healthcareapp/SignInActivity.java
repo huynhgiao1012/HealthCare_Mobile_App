@@ -30,8 +30,7 @@ import java.net.URL;
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
     private CheckBox rememberMeCB;
-    private Button signInBtn, forgotPWBtn, toSignUpBtn;
-    private MaterialToolbar toolbar;
+    private Button signInBtn, toSignUpBtn;
     private FirebaseAuth mAuth;
 
     @Override
@@ -44,15 +43,11 @@ public class SignInActivity extends AppCompatActivity {
         usernameInput = findViewById(R.id.IDNumField);
         passwordInput = findViewById(R.id.passwordField);
         signInBtn = findViewById(R.id.signInButton);
-        forgotPWBtn = findViewById(R.id.forgotPWButton);
-        toolbar = findViewById(R.id.toolbar);
         toSignUpBtn = findViewById(R.id.toSignUpPageBtn);
 
         signInBtn.setOnClickListener(signInHandler);
-        forgotPWBtn.setOnClickListener(forgotPWHandler);
         toSignUpBtn.setOnClickListener(toSignUpHandler);
 
-        toolbar.setNavigationOnClickListener(onBackPressedHandler);
     }
 
     @Override
@@ -70,14 +65,6 @@ public class SignInActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             signInUser();
-        }
-    };
-
-    private View.OnClickListener forgotPWHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
-            startActivity(intent);
         }
     };
 

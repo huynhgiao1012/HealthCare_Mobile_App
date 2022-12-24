@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthcareapp.utilities.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +49,9 @@ public class HomeFragment extends Fragment {
     private TopNewsAdapter adapter;
     private MaterialCardView toUserInfo, toAddSymptoms, toCallDoctor;
     private NavigationBarView parentBottomNav;
+    private TextView patientNameTextView;
+
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +66,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
 
         topNewsRV = getView().findViewById(R.id.topNewsRV);
         topNewsRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -70,6 +85,25 @@ public class HomeFragment extends Fragment {
         toCallDoctor.setOnClickListener(toCallDoctorHandler);
 
         parentBottomNav = view.getRootView().findViewById(R.id.bottomNav);
+
+        patientNameTextView = view.findViewById(R.id.patientName);
+
+        String UID = mAuth.getUid();
+        if (UID != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(UID);
+            databaseReference.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        String patientName = task.getResult().getValue().toString();
+                        patientNameTextView.setText(patientName);
+                    }
+                    else {
+                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
 
         Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
