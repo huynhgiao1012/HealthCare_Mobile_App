@@ -19,7 +19,7 @@ public class Constants {
 
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
 
-    public static final String IP_ADDRESS = "192.168.1.7";
+    public static final String IP_ADDRESS = "192.168.1.9";
 
     public static String idCard = "";
 

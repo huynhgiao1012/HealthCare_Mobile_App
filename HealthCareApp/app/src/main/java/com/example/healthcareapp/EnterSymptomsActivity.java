@@ -6,13 +6,18 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.healthcareapp.utilities.Constants;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -47,6 +52,9 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(menuItemClickListener);
 
         addSymptomBtn.setOnClickListener(addSymptomHandler);
+
+        symptomNameField.getEditText().addTextChangedListener(clearError);
+        descriptionField.getEditText().addTextChangedListener(clearError);
     }
 
     private View.OnClickListener onBackPressedHandler = new View.OnClickListener() {
@@ -57,21 +65,65 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         }
     };
 
+    private TextWatcher clearError = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            symptomNameField.setError(null);
+            descriptionField.setError(null);
+        }
+    };
+
     private View.OnClickListener addSymptomHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            addSymptomBtn.setEnabled(false);
+            addSymptomBtn.setText("Adding...");
+
             String symptomName, description;
             symptomName = symptomNameField.getEditText().getText().toString();
             description = descriptionField.getEditText().getText().toString();
 
-            // TODO: Add logics to save symptoms to DB
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    addSymptom(symptomName, description);
-                }
-            });
-            thread.start();
+            if (!symptomName.isEmpty() && !description.isEmpty()) {
+                Handler handler = new Handler();
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        addSymptom(symptomName, description);
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                symptomNameField.getEditText().setText("");
+                                descriptionField.getEditText().setText("");
+                                addSymptomBtn.setEnabled(true);
+                                addSymptomBtn.setText("Add Symptom");
+                            }
+                        });
+                    }
+                });
+                thread.start();
+            }
+            else if (symptomName.isEmpty()) {
+                symptomNameField.setError("Field cannot be empty");
+                addSymptomBtn.setEnabled(true);
+                addSymptomBtn.setText("Add Symptom");
+            }
+            else if (description.isEmpty()) {
+                descriptionField.setError("Field cannot be empty");
+                addSymptomBtn.setEnabled(true);
+                addSymptomBtn.setText("Add Symptom");
+            }
         }
     };
 
