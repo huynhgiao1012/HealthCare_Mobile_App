@@ -5,6 +5,8 @@ import com.healthcareapp.healthcareappbackend.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/account")
 public class AccountController {
@@ -37,6 +39,17 @@ public class AccountController {
         return accountService.save(accountDtoInput);
     }
 
+    @PutMapping(path = "/updateInfo")
+    public AccountDto updateInfo(@RequestParam String idCard, @RequestParam(required = false) String name, @RequestParam(required = false) String password, @RequestParam(required = false) String role) {
+        AccountDto accountDtoInput = new AccountDto();
+        accountDtoInput.setIdCard(idCard);
+        accountDtoInput.setName(name);
+        accountDtoInput.setPassword(password);
+        accountDtoInput.setRole(role);
+        accountDtoInput.setActive(true);
+        return accountService.updateInfo(accountDtoInput);
+    }
+
     @PutMapping(path = "/forgotPassword")
     public AccountDto forgotPassword(@RequestParam String idCard, @RequestParam String password) {
         AccountDto accountDtoInput = new AccountDto();
@@ -44,5 +57,10 @@ public class AccountController {
         accountDtoInput.setPassword(password);
 
         return accountService.forgotPassword(accountDtoInput);
+    }
+
+    @GetMapping(path = "/listOfDoctors")
+    public List<AccountDto> listOfDoctors() {
+        return accountService.listDoctors();
     }
 }

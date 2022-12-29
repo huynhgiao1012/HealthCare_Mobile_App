@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.healthcareapp.utilities.Constants;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -52,7 +53,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         public void onClick(View v) {
             // TODO: Add logics to change PW in DB
             try {
-                Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/forgotPassword").buildUpon()
+                Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/account/forgotPassword").buildUpon()
                         .appendQueryParameter("idCard", IDNumField.getEditText().getText().toString())
                         .appendQueryParameter("password", newPWField.getEditText().getText().toString())
                         .build();

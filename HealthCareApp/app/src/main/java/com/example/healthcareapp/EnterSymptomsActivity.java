@@ -4,14 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.healthcareapp.utilities.Constants;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -52,8 +61,42 @@ public class EnterSymptomsActivity extends AppCompatActivity {
             description = descriptionField.getEditText().getText().toString();
 
             // TODO: Add logics to save symptoms to DB
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    addSymptom(symptomName, description);
+                }
+            });
+            thread.start();
         }
     };
+
+    private void addSymptom(String symptomName, String description) {
+        try {
+            Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/symptomPatient/saveSymptomPatient").buildUpon()
+                    .appendQueryParameter("symptomName", symptomName)
+                    .appendQueryParameter("patientIdCard", Constants.idCard)
+                    .appendQueryParameter("symptomDescription", description)
+                    .build();
+
+            URL obj = new URL(builtURI.toString());
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            String content = "";
+            while ((inputLine = in.readLine()) != null) {
+                content += inputLine;
+            }
+            if (content == "") {
+                Log.d("SaveSymptomAct", "No id card available");
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
