@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.healthcareapp.utilities.Constants;
 import com.example.healthcareapp.utilities.Utilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -130,7 +131,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // TODO: Add logics to add user to db
                         try {
-                            Uri builtURI = Uri.parse("http://192.168.1.4:8080/api/account/signup").buildUpon()
+                            Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/account/signup").buildUpon()
                                     .appendQueryParameter("idCard", IDNumInput.getEditText().getText().toString())
                                     .appendQueryParameter("name", nameInput.getEditText().getText().toString())
                                     .appendQueryParameter("password", PWInput.getEditText().getText().toString())
@@ -150,6 +151,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (content == "") {
                                 Log.d("SignUpAct", "No id card available");
                             }
+                            Constants.idCard = IDNum;
                             in.close();
                         } catch (IOException e) {
                             e.printStackTrace();

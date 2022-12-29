@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.healthcareapp.utilities.Constants;
 import com.example.healthcareapp.utilities.Utilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -106,7 +107,7 @@ public class SignInActivity extends AppCompatActivity {
 
                                 try {
 
-                                    Uri builtURI = Uri.parse("http://localhost:8080/api/account/getAccountByIdCard").buildUpon()
+                                    Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/account/getAccountByIdCard").buildUpon()
                                             .appendQueryParameter("idCard", IDNum)
                                             .appendQueryParameter("password", passwordInput.getEditText().getText().toString())
                                             .build();
@@ -124,6 +125,7 @@ public class SignInActivity extends AppCompatActivity {
                                     if (content == "") {
                                         Log.d("SignInAct", "No id card available");
                                     }
+                                    Constants.idCard = IDNum;
                                     in.close();
                                 } catch (IOException e) {
                                     e.printStackTrace();

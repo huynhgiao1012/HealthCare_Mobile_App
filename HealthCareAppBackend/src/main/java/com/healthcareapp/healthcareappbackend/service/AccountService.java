@@ -7,6 +7,8 @@ import com.healthcareapp.healthcareappbackend.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,28 @@ public class AccountService {
         return accountMapper.INSTANCE.accountEntityToAccountDto(accountEntity);
     }
 
+    public AccountDto updateInfo(AccountDto accountDto) {
+        // Already registered with this idCard
+        if (!accountRepository.findByIdCard(accountDto.getIdCard()).isPresent()) {
+            return null;
+        }
+
+        // Create new record
+        AccountEntity accountEntity = accountRepository.findByIdCard(accountDto.getIdCard()).get();
+        if (accountDto.getPassword() != "") {
+            accountEntity.setPassword(accountDto.getPassword());
+        }
+        if (accountDto.getPhone() != "") {
+            accountEntity.setPhone(accountDto.getPhone());
+        }
+        if (accountDto.getName() != "") {
+            accountEntity.setName(accountDto.getName());
+        }
+        accountEntity = accountRepository.save(accountEntity);
+
+        return accountMapper.INSTANCE.accountEntityToAccountDto(accountEntity);
+    }
+
     public AccountDto forgotPassword(AccountDto accountDto) {
         // No idCard
         if (!accountRepository.findByIdCard(accountDto.getIdCard()).isPresent()) {
@@ -51,8 +75,16 @@ public class AccountService {
         AccountEntity oldAccount = accountRepository.findByIdCard(accountDto.getIdCard()).get();
         oldAccount.setPassword(accountDto.getPassword());
 
-        System.out.println(oldAccount.getPassword());
-
         return accountMapper.INSTANCE.accountEntityToAccountDto(accountRepository.save(oldAccount));
+    }
+
+    public List<AccountDto> listDoctors() {
+        List<AccountDto> listDoctor = new ArrayList<>();
+        List<AccountEntity> listDoctorEntity = accountRepository.findListOfDoctor();
+
+        for(AccountEntity doctor: listDoctorEntity) {
+            listDoctor.add(accountMapper.INSTANCE.accountEntityToAccountDto(doctor));
+        }
+        return listDoctor;
     }
 }
