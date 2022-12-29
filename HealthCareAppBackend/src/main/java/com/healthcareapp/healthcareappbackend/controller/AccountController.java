@@ -28,6 +28,12 @@ public class AccountController {
         return account;
     }
 
+    @GetMapping(path = "/getInfo")
+    public AccountDto getInfoByIdCard(@RequestParam String idCard) {
+        AccountDto account = accountService.findAccountByIdCard(idCard);
+        return account;
+    }
+
     @PostMapping(path = "/signup")
     public AccountDto signUp(@RequestParam String idCard, @RequestParam String name, @RequestParam String password, @RequestParam String role) {
         AccountDto accountDtoInput = new AccountDto();

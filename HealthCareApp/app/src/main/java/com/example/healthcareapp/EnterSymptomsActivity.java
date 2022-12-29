@@ -15,7 +15,9 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +30,8 @@ public class EnterSymptomsActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
     private TextInputLayout symptomNameField, descriptionField;
     private MaterialButton addSymptomBtn;
+
+    private User userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,28 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void getInfo() throws IOException, JSONException {
+        Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/account/getInfo").buildUpon()
+                .appendQueryParameter("idCard", Constants.idCard)
+                .build();
+
+        URL obj = new URL(builtURI.toString());
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        String content = "";
+        while ((inputLine = in.readLine()) != null) {
+            content += inputLine;
+        }
+        JSONObject account = new JSONObject(content);
+
+        userInfo = new User(account.getString("idCard"), account.getString("name"), account.getString("password"), account.getString("phone"));
+
+        in.close();
     }
 
     private Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
