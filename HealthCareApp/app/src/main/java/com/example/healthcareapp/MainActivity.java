@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private NavigationBarView bottomNav;
     private Fragment homeFragment, newsFragment, chatFragment, userFragment;
     private FirebaseAuth mAuth;
-    private String patientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

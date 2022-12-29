@@ -45,7 +45,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private View.OnClickListener updateInfoHandler = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO: Add logics to handle checking if info is new and saving to DB
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {

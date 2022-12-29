@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
     private TopNewsAdapter adapter;
     private MaterialCardView toUserInfo, toAddSymptoms, toCallDoctor;
     private NavigationBarView parentBottomNav;
-    private TextView patientNameTextView;
+    private TextView patientNameTextView, loadingTextView;
 
     private FirebaseAuth mAuth;
 
@@ -75,6 +75,13 @@ public class HomeFragment extends Fragment {
         topNewsList = new ArrayList<>();
         adapter = new TopNewsAdapter(getContext(), topNewsList);
         topNewsRV.setAdapter(adapter);
+
+        loadingTextView = view.findViewById(R.id.loadingTextView);
+
+        if (topNewsList.isEmpty()) {
+            topNewsRV.setVisibility(View.GONE);
+            loadingTextView.setVisibility(View.VISIBLE);
+        }
 
         toUserInfo = view.findViewById(R.id.toUserInfoCard);
         toAddSymptoms = view.findViewById(R.id.toAddSymptomsCard);
@@ -119,6 +126,8 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();
+                        topNewsRV.setVisibility(View.VISIBLE);
+                        loadingTextView.setVisibility(View.GONE);
                     }
                 });
             }

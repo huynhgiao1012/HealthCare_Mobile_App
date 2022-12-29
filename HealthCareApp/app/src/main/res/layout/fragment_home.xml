@@ -44,8 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pfp"
-                android:text="Patient Name"
                 android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="Patient Name"
                 android:textAlignment="center"
                 android:textColor="@color/md_theme_light_onSecondary" />
 
@@ -170,6 +170,15 @@
             android:id="@+id/topNewsRV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/loadingTextView"
+            style="@style/TextAppearance.Material3.HeadlineSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_text"
+            android:textAlignment="center"
+            android:visibility="gone" />
     </LinearLayout>
 
 

@@ -54,16 +54,41 @@
                 android:layout_below="@id/doctorInfoPfp"
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:text="Name"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_marginBottom="@dimen/spacing_medium"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/doctorInfoName"
-                android:gravity="center"
-                android:text="Doctor info goes here" />
+                android:orientation="vertical"
+                android:layout_below="@id/doctorInfoName">
 
-            <!--TODO: Add views to display doctor's info-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number: 12 345 678"
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/lorem_ipsum_text"/>
+
+                </ScrollView>
+
+            </LinearLayout>
         </RelativeLayout>
 
 

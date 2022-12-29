@@ -21,6 +21,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import java.net.URL;
 
 public class SignInActivity extends AppCompatActivity {
     private TextInputLayout usernameInput, passwordInput;
-    private CheckBox rememberMeCB;
     private Button signInBtn, toSignUpBtn;
     private FirebaseAuth mAuth;
 

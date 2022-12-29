@@ -1,12 +1,11 @@
 package com.example.healthcareapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +30,7 @@ public class NewsFragment extends Fragment {
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
     private ArrayList<NewsArticle> newsArticles;
+    private TextView loadingTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,13 @@ public class NewsFragment extends Fragment {
         adapter = new NewsAdapter(this.getContext(), newsArticles);
         recyclerView.setAdapter(adapter);
 
+        loadingTextView = view.findViewById(R.id.loadingTextView);
+
+        if (newsArticles.isEmpty()) {
+            loadingTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+
         Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -69,6 +76,8 @@ public class NewsFragment extends Fragment {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();
+                        recyclerView.setVisibility(View.VISIBLE);
+                        loadingTextView.setVisibility(View.GONE);
                     }
                 });
             }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NewsFragment">
 
     <LinearLayout
@@ -20,22 +20,30 @@
             app:cardElevation="16dp">
 
             <TextView
+                style="@style/TextAppearance.Material3.DisplaySmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Today's News"
-                style="@style/TextAppearance.Material3.DisplaySmall"
                 android:padding="@dimen/spacing_xl"
-                android:textColor="@color/md_theme_light_onPrimary"/>
+                android:text="Today's News"
+                android:textColor="@color/md_theme_light_onPrimary" />
 
         </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/newsRV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/newsRV" />
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/loadingTextView"
+            style="@style/TextAppearance.Material3.HeadlineSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_text"
+            android:textAlignment="center"
+            android:visibility="gone" />
 
     </LinearLayout>
-
 
 
 </FrameLayout>

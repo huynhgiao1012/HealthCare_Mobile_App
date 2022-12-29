@@ -28,4 +28,14 @@
         android:layout_below="@id/appBarLayout"
         android:padding="@dimen/spacing_medium" />
 
+    <TextView
+        android:id="@+id/loadingTextView"
+        style="@style/TextAppearance.Material3.HeadlineSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout"
+        android:text="@string/loading_text"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
 </RelativeLayout>

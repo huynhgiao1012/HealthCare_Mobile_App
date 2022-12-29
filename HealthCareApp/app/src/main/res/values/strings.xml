@@ -18,7 +18,11 @@
     <string name="user_item">User</string>
     <string name="lorem_ipsum_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel arcu et nunc pellentesque porttitor. Donec ut scelerisque est. Proin facilisis congue justo semper interdum. Vivamus varius felis quis tristique elementum. Aliquam erat volutpat. Integer molestie lacus sed turpis imperdiet mattis. Maecenas id viverra sem. Vivamus pretium leo vitae dui rutrum, in accumsan magna ullamcorper. Phasellus sodales nibh elit, a vestibulum massa ultrices vitae. In et rhoncus nisi. Pellentesque nec finibus mauris.
 
-Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendisse potenti. Sed convallis malesuada nisl, ut sodales est vulputate quis. Mauris purus purus, interdum suscipit magna vitae, aliquam gravida mauris. Nam hendrerit nunc sapien, quis convallis nunc semper sit amet. Donec magna augue, bibendum nec est nec, mollis placerat turpis. Donec in felis luctus, ultricies lectus sed, pharetra libero. Sed bibendum quis erat at venenatis. Proin egestas consectetur ante. Nam finibus sagittis nulla sit amet convallis. Cras tempus scelerisque augue ac auctor. In tristique sem id tincidunt volutpat. Aliquam vehicula posuere nisl id gravida. Cras enim arcu, aliquam vel consectetur sit amet, sollicitudin et nulla. Mauris nec vestibulum felis. Nam egestas dignissim nunc, vel dignissim turpis pellentesque in.</string>
+Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendisse potenti. Sed convallis malesuada nisl, ut sodales est vulputate quis. Mauris purus purus, interdum suscipit magna vitae, aliquam gravida mauris. Nam hendrerit nunc sapien, quis convallis nunc semper sit amet. Donec magna augue, bibendum nec est nec, mollis placerat turpis. Donec in felis luctus, ultricies lectus sed, pharetra libero. Sed bibendum quis erat at venenatis. Proin egestas consectetur ante. Nam finibus sagittis nulla sit amet convallis. Cras tempus scelerisque augue ac auctor. In tristique sem id tincidunt volutpat. Aliquam vehicula posuere nisl id gravida. Cras enim arcu, aliquam vel consectetur sit amet, sollicitudin et nulla. Mauris nec vestibulum felis. Nam egestas dignissim nunc, vel dignissim turpis pellentesque in.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel arcu et nunc pellentesque porttitor. Donec ut scelerisque est. Proin facilisis congue justo semper interdum. Vivamus varius felis quis tristique elementum. Aliquam erat volutpat. Integer molestie lacus sed turpis imperdiet mattis. Maecenas id viverra sem. Vivamus pretium leo vitae dui rutrum, in accumsan magna ullamcorper. Phasellus sodales nibh elit, a vestibulum massa ultrices vitae. In et rhoncus nisi. Pellentesque nec finibus mauris.
+
+Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendisse potenti. Sed convallis malesuada nisl, ut sodales est vulputate quis. Mauris purus purus, interdum suscipit magna vitae, aliquam gravida mauris. Nam hendrerit nunc sapien, quis convallis nunc semper sit amet. Donec magna augue, bibendum nec est nec, mollis placerat turpis. Donec in felis luctus, ultricies lectus sed, pharetra libero. Sed bibendum quis erat at venenatis. Proin egestas consectetur ante. Nam finibus sagittis nulla sit amet convallis. Cras tempus scelerisque augue ac auctor. In tristique sem id tincidunt volutpat. Aliquam vehicula posuere nisl id gravida. Cras enim arcu, aliquam vel consectetur sit amet, sollicitudin et nulla. Mauris nec vestibulum felis. Nam egestas dignissim nunc, vel dignissim turpis pellentesque in.
+    </string>
     <string name="share_text">Share</string>
     <string name="info_text">Info</string>
 
@@ -45,8 +49,12 @@ Vivamus posuere nulla vel ex dapibus, nec tincidunt turpis scelerisque. Suspendi
         <item>Ng Van G</item>
         <item>Tran Van A</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="new_password_label">New Password</string>
+
+    <string name="about_this_app_text">This app is the property of the four of us: Le Thi Huynh Giao, Tran Hoang Thinh, Duong Minh Loc, and Luong Phuc Dien</string>
+
+    <string name="about_us_text">Le Thi Huynh Giao - ITITIU19\nTran Hoang Thinh - ITITIU19\nDuong Minh Loc - ITITIU19024\nLuong Phuc Dien - ITITIU19010</string>
+    <string name="loading_text">Loading...</string>
 
 </resources>

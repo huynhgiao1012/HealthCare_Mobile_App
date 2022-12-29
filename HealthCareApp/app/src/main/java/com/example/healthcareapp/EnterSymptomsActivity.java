@@ -19,6 +19,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +40,17 @@ public class EnterSymptomsActivity extends AppCompatActivity {
 
     private List<Symptom> listSymptom;
 
+    private FirebaseAuth mAuth;
+    private String IDNum, email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_symptoms);
+
+        mAuth = FirebaseAuth.getInstance();
+        email = mAuth.getCurrentUser().getEmail();
+        IDNum = email.substring(0, email.length() - 18);
 
         toolbar = findViewById(R.id.toolbar);
         symptomNameField = findViewById(R.id.symptomNameField);
@@ -132,7 +140,7 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         try {
             Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/symptomPatient/saveSymptomPatient").buildUpon()
                     .appendQueryParameter("symptomName", symptomName)
-                    .appendQueryParameter("patientIdCard", Constants.idCard)
+                    .appendQueryParameter("patientIdCard", IDNum)
                     .appendQueryParameter("symptomDescription", description)
                     .build();
 
@@ -153,34 +161,6 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void getInfo() throws IOException, JSONException {
-        Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/symptomPatient/getSymptomFromIdCard").buildUpon()
-                .appendQueryParameter("idCard", Constants.idCard)
-                .build();
-
-        URL obj = new URL(builtURI.toString());
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        String content = "";
-        while ((inputLine = in.readLine()) != null) {
-            content += inputLine;
-        }
-
-        JSONArray symptomList = new JSONArray(content);
-
-        for (int i = 0; i < symptomList.length(); i++) {
-            JSONObject symptom = symptomList.getJSONObject(i);
-
-            listSymptom.add(new Symptom(
-                    symptom.getString("name"),
-                    symptom.getString("description")));
-        }
-        in.close();
     }
 
     private Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
