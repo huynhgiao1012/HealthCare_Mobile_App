@@ -30,13 +30,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class EnterSymptomsActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
     private TextInputLayout symptomNameField, descriptionField;
     private MaterialButton addSymptomBtn;
 
-    private User userInfo;
+    private List<Symptom> listSymptom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +156,7 @@ public class EnterSymptomsActivity extends AppCompatActivity {
     }
 
     private void getInfo() throws IOException, JSONException {
-        Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/account/getInfo").buildUpon()
+        Uri builtURI = Uri.parse("http://" + Constants.IP_ADDRESS + ":8080/api/symptomPatient/getSymptomFromIdCard").buildUpon()
                 .appendQueryParameter("idCard", Constants.idCard)
                 .build();
 
@@ -169,10 +170,16 @@ public class EnterSymptomsActivity extends AppCompatActivity {
         while ((inputLine = in.readLine()) != null) {
             content += inputLine;
         }
-        JSONObject account = new JSONObject(content);
 
-        userInfo = new User(account.getString("idCard"), account.getString("name"), account.getString("password"), account.getString("phone"));
+        JSONArray symptomList = new JSONArray(content);
 
+        for (int i = 0; i < symptomList.length(); i++) {
+            JSONObject symptom = symptomList.getJSONObject(i);
+
+            listSymptom.add(new Symptom(
+                    symptom.getString("name"),
+                    symptom.getString("description")));
+        }
         in.close();
     }
 

@@ -1,6 +1,8 @@
 package com.healthcareapp.healthcareappbackend.service;
 
+import com.healthcareapp.healthcareappbackend.converter.SymptomMapper;
 import com.healthcareapp.healthcareappbackend.converter.SymptomPatientMapper;
+import com.healthcareapp.healthcareappbackend.dto.SymptomDto;
 import com.healthcareapp.healthcareappbackend.dto.SymptomPatientDto;
 import com.healthcareapp.healthcareappbackend.entity.SymptomEntity;
 import com.healthcareapp.healthcareappbackend.entity.SymptomPatientEntity;
@@ -9,6 +11,9 @@ import com.healthcareapp.healthcareappbackend.repository.SymptomPatientRepositor
 import com.healthcareapp.healthcareappbackend.repository.SymptomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SymptomPatientService {
@@ -24,6 +29,9 @@ public class SymptomPatientService {
     @Autowired
     private SymptomPatientMapper symptomPatientMapper;
 
+    @Autowired
+    private SymptomMapper symptomMapper;
+
     public SymptomPatientDto save(SymptomPatientDto symptomPatientDto) {
         SymptomPatientEntity symptomPatient = symptomPatientMapper.INSTANCE.dtoToEntity(symptomPatientDto);
         if (symptomRepository.findByName(symptomPatientDto.getSymptomName()).isEmpty()) {
@@ -37,5 +45,15 @@ public class SymptomPatientService {
         symptomPatient.setAccount(accountRepository.findByIdCard(symptomPatientDto.getPatientIdCard()).get());
 
         return symptomPatientMapper.INSTANCE.entityToDto(symptomPatientRepository.save(symptomPatient));
+    }
+
+    public List<SymptomDto> getSymptomsFromIdCard(String idCard) {
+        List<SymptomDto> listSymptom = new ArrayList<>();
+
+        for (SymptomEntity symptom: symptomPatientRepository.getSymptoms(idCard)) {
+            listSymptom.add(symptomMapper.INSTANCE.entityToDto(symptom));
+        }
+
+        return listSymptom;
     }
 }

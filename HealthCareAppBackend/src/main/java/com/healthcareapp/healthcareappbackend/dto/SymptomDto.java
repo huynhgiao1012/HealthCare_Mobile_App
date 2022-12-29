@@ -10,4 +10,5 @@ import lombok.*;
 public class SymptomDto {
     private Long id;
     private String name;
+    private String description;
 }
